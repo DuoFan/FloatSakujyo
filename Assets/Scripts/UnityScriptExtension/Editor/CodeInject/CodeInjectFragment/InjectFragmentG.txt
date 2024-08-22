@@ -1,0 +1,15 @@
+int inject_G_1 = 10;
+while(true)
+{
+int inject_G_2 = inject_G_1 - 1;
+int inject_G_3 = inject_G_2 - 1;
+int inject_G_4 = inject_G_3 - 1;
+int inject_G_5 = inject_G_4 - 1;
+inject_G_1 = inject_G_5 - 1;
+if(inject_G_1 <= 0)
+{
+break;
+}
+}
+int inject_G_6 = inject_G_1 % 3;
+bool inject_G_7 = inject_G_6 > 1;

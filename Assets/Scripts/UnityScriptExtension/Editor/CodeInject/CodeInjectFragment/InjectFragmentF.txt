@@ -1,0 +1,11 @@
+        string inject_F_1 = "";
+        int inject_F_3 = 0;
+        char[] inject_F_4 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+        for (int inject_F_2 = 0; inject_F_2 < inject_F_3; inject_F_2++)
+        {
+            if (inject_F_2 % 5 == 0)
+            {
+                inject_F_1 += " ";
+            }
+            inject_F_1 += inject_F_4[inject_F_2 % inject_F_4.Length].ToString();
+        }

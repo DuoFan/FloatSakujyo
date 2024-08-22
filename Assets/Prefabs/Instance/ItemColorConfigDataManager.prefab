@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1769345199007948038
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1769345199007948039}
+  - component: {fileID: 1769345199007948036}
+  m_Layer: 0
+  m_Name: ItemColorConfigDataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1769345199007948039
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769345199007948038}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8.836361, y: 4.7906437, z: -4.20093}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1769345199007948036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769345199007948038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f23b39e991600c045a87aea578eb8c19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configDatas:
+  - itemColor: 1
+    item: {fileID: 2823679559333479413, guid: 615392936cde1e444a5508bf44b23e5d, type: 3}
+    boxTexture: {fileID: 0}
+    coverTexture: {fileID: 0}
+  - itemColor: 2
+    item: {fileID: 7548521956735881813, guid: 4e8965b33bc0f1e4a9b2c44e259b41c0, type: 3}
+    boxTexture: {fileID: 0}
+    coverTexture: {fileID: 0}
+  - itemColor: 3
+    item: {fileID: 5348421493163242048, guid: ef48c0a8e2a0a3945aca09a2de163593, type: 3}
+    boxTexture: {fileID: 0}
+    coverTexture: {fileID: 0}
+  - itemColor: 4
+    item: {fileID: 4058740606054353354, guid: e53ecd4ca033fbe4eaf4b8a0d2582a26, type: 3}
+    boxTexture: {fileID: 0}
+    coverTexture: {fileID: 0}
+  - itemColor: 5
+    item: {fileID: 5931586383691768882, guid: 649a75861261343488062872c19daa9e, type: 3}
+    boxTexture: {fileID: 0}
+    coverTexture: {fileID: 0}

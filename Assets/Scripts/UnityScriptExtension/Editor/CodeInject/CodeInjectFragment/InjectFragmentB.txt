@@ -1,0 +1,16 @@
+int inject_B_1 = 0; 
+
+ADD_B_1:
+inject_B_1++;
+if(inject_B_1 < 2)
+{
+goto ADD_B_1;
+}
+
+int[] inject_B_2 = new int[1];
+int inject_B_3 = 10;
+while(inject_B_3 > 0)
+{
+inject_B_2[0] = inject_B_3;
+inject_B_3 --;
+}

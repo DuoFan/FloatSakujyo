@@ -1,0 +1,16 @@
+int inject_A_1 = 0; 
+while(inject_A_1 < 2)
+{
+inject_A_1++;
+}
+
+bool inject_A_2 = false;  
+int inject_A_3 = 4; 
+inject_A_2 = inject_A_3 % 2 == 0;
+
+float inject_A_4 = 0.5f;  
+inject_A_4 += 0.1f;
+if(inject_A_4 >= 1)
+{
+bool inject_A_5 = true;
+}

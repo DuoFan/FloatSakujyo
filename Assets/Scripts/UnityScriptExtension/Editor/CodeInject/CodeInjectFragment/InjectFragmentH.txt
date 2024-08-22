@@ -1,0 +1,17 @@
+string inject_H_1 = string.Empty;
+int inject_H_2 = 10;
+while(true)
+{
+int index = inject_H_2 % 3;
+switch(index)
+{
+case 0: inject_H_2--; break;
+case 1: inject_H_2 -= 3;  break;
+case 2: inject_H_2 -= 5; break;
+}
+if(inject_H_2 <= 0)
+{
+break;
+}
+}
+inject_H_1 = inject_H_2.ToString();

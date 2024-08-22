@@ -1,0 +1,15 @@
+int inject_I_1 = 0;
+while(inject_I_1 < 10)
+{
+bool inject_I_2 = inject_I_1 % 2 == 0;
+if(inject_I_2)
+{
+inject_I_1 += 5;
+}
+else
+{
+inject_I_1 += 4;
+}
+}
+float inject_I_3 = inject_I_1 - 10;
+string inject_I_4 = inject_I_3.ToString();

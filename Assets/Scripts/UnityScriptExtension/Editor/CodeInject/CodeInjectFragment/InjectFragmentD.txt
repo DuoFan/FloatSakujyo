@@ -1,0 +1,15 @@
+Color inject_D_1 = new Color(1,1,1,1); 
+Color inject_D_2 = new Color(0,0,0,0); 
+
+Color inject_D_3 = new Color((inject_D_1.r + inject_D_2.r) / 2,(inject_D_1.g + inject_D_2.g) / 2,(inject_D_1.b + inject_D_2.b) / 2,(inject_D_1.a + inject_D_2.a) / 2);
+
+bool inject_D_4 = inject_D_3.g > inject_D_3.b;
+string inject_D_5;
+if(inject_D_4)
+{
+inject_D_5 = "green is great than blue";
+}
+else
+{
+inject_D_5 = "green is less than blue";
+}

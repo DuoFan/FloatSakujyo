@@ -1,0 +1,21 @@
+bool inject_E_1 = true; 
+bool inject_E_2 = false;
+
+bool inject_E_3 = false;
+int inject_E_4 = 0;
+switch(inject_E_4)
+{
+case 0: inject_E_3 = true; break;
+case 1: inject_E_3 = false; break;
+}
+
+bool inject_E_5 = inject_E_1 && inject_E_2 && inject_E_3;
+int inject_E_6 = 0;
+while(inject_E_5)
+{
+inject_E_6++;
+if(inject_E_6 >= 1)
+{
+break;
+}
+}

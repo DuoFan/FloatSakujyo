@@ -1,0 +1,23 @@
+int inject_C_1 = 0; 
+int inject_C_2 = 0;
+if(inject_C_1 == 0)
+{
+inject_C_2 += 5;
+}
+else
+{
+inject_C_2 += 10;
+}
+
+if(inject_C_2 >= 10)
+{
+int inject_C_3 = inject_C_2;
+while(inject_C_3 >= 10)
+{
+if(inject_C_3 <= 10)
+{
+break;
+}
+inject_C_3 --;
+} 
+}
