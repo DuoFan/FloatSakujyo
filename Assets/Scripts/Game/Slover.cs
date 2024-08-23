@@ -23,6 +23,11 @@ namespace FloatSakujyo.Game
 
         Vector3[] vertices = new Vector3[8];
 
+        public void SetBuoyancyForce(float force)
+        {
+            buoyancyForce = force;
+        }
+
         public void AddRigidbody(Rigidbody rigidbody)
         {
             if(rigidbodies == null)

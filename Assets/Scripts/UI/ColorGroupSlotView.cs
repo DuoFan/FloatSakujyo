@@ -28,14 +28,27 @@ namespace FloatSakujyo.UI
         public ColorGroupSloter Sloter { get; private set; }
 
 
-        public void Awake()
+        public void InitSlotUIPosition(float width)
         {
             slotUILocalPoses = new Vector3[slotUIs.Length];
+
+            var startX = -width / 2f;
+            var delta = width / (slotUIs.Length - 2f);
+            for (int i = 1; i < slotUIs.Length; i++)
+            {
+                slotUIs[i].transform.localPosition = new Vector3(startX + (i - 1) * delta, 2, 3.75f);
+            }
+
             for (int i = 0; i < slotUIs.Length; i++)
             {
                 slotUILocalPoses[i] = slotUIs[i].transform.localPosition;
                 slotUIs[i].SetColorGroupSlotView(this);
             }
+        }
+
+        public void InitNoneColorGroupSlotUIPosition(float width)
+        {
+            (slotUIs[0] as NoneColorGroupSlotUI).SetGroupSlotWidth(width);
         }
 
         public void Init(ColorGroupSloter _sloter)

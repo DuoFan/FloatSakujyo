@@ -6,7 +6,7 @@ namespace FloatSakujyo.Game
 {
     public enum ItemGeneration
     {
-        Eden, Mid, Old
+        Eden, Old
     }
 }
 

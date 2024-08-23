@@ -15,11 +15,11 @@ MonoBehaviour:
   id: 0
   itemColorGroupDatas:
   - itemColor: 1
-    groupCount: 20
+    groupCount: 5
   - itemColor: 2
-    groupCount: 20
+    groupCount: 5
+  - itemColor: 3
+    groupCount: 5
   isCustomColorGroup: 0
   customColorGroupQueue: 
-  edenItemCount: 5
-  midItemCount: 5
-  oldItemCount: 10
+  itemCount: 9

@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace FloatSakujyo.UI
 {
@@ -18,9 +19,10 @@ namespace FloatSakujyo.UI
         [SerializeField]
         MeshRenderer boxRenderer;
         [SerializeField]
-        MeshRenderer coverRenderer;
-        [SerializeField]
         Button btn;
+
+        [SerializeField]
+        TMP_Text filledText;
 
         [SerializeField]
         Animator animator;
@@ -31,22 +33,14 @@ namespace FloatSakujyo.UI
 
         public void Awake()
         {
-            //btn.onClick.AddListener(TryEnable);
+            btn.onClick.AddListener(TryEnable);
         }
 
         public override void Init(ColorGroupSlot colorGourpSlot)
         {
             base.Init(colorGourpSlot);
 
-            /*var colorConfig = ItemColorConfigDataManager.Instance.GetConfigData(ItemColor);
-
-            var material = new Material(boxRenderer.material);
-            material.mainTexture = colorConfig.BoxTexture;
-            boxRenderer.material = material;
-
-            material = new Material(coverRenderer.material);
-            material.mainTexture = colorConfig.CoverTexture;
-            coverRenderer.material = material;*/
+            btn.gameObject.CheckActiveSelf(false);
 
             for (int i = 0; i < Slot.Items.Length; i++)
             {
@@ -66,8 +60,16 @@ namespace FloatSakujyo.UI
                     item.transform.rotation = Quaternion.Euler(-100, 0, 0);
                 }
             }
+
+            filledText.text = $"{Slot.TotalSlotCount - Slot.EmptySlotCount}/{Slot.TotalSlotCount}";
         }
 
+
+        protected override IEnumerator FillItem(Item item, int index)
+        {
+            yield return base.FillItem(item, index);
+            filledText.text = $"{Slot.TotalSlotCount - Slot.EmptySlotCount}/{Slot.TotalSlotCount}";
+        }
 
         public override IEnumerator OnCompleted()
         {
@@ -79,21 +81,21 @@ namespace FloatSakujyo.UI
             Slot.OnFillItem -= FillItem;
             Slot = null;
 
-            //animator.Play("box_move");
+            animator.Play("close");
 
            // var goldStart = colorGroupSlotView.SlotGoldStarts[selfIndex];
 
             //GameUIManager.Instance.PlayFlyGold(goldStart);
 
             //盖子动画时间
-            yield return new WaitForSecondsRealtime(0.04f);
+            yield return new WaitForSecondsRealtime(0.15f);
 
             for (int i = 0; i < slotPoints.Length; i++)
             {
                 GameObject.Destroy(slotPoints[i].gameObject);
             }
 
-            //yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f);
+            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f);
 
             yield return transform.DOMove(transform.position + Vector3.up * 30, 0.2f).WaitForCompletion();
 
@@ -104,7 +106,7 @@ namespace FloatSakujyo.UI
         {
             base.Disable();
             boxRenderer.gameObject.CheckActiveSelf(false);
-            //btn.gameObject.CheckActiveSelf(true);
+            btn.gameObject.CheckActiveSelf(true);
         }
 
         public void TryEnable()
@@ -120,7 +122,7 @@ namespace FloatSakujyo.UI
         public void Enable()
         {
             var sloter = colorGroupSlotView.Sloter;
-            var color = sloter.FindUrgentColor(GameController.Instance.LevelEntity.OldItems);
+            var color = sloter.FindUrgentColor(GameController.Instance.OldItems);
             var group = sloter.OpenNewGroup(color);
             Init(group);
             boxRenderer.gameObject.CheckActiveSelf(true);

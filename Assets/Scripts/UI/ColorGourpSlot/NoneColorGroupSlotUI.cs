@@ -13,8 +13,14 @@ namespace FloatSakujyo.UI
     {
         [SerializeField]
         Image warningImg;
+        float groupSlotWidth;
 
         public ItemColor ItemColor => Slot.ItemColor;
+
+        public void SetGroupSlotWidth(float width)
+        {
+            groupSlotWidth = width;
+        }
 
         public override void Init(ColorGroupSlot colorGourpSlot)
         {
@@ -35,11 +41,13 @@ namespace FloatSakujyo.UI
                 }
             }
 
-           /*for (int i = 0; i < activatedSlotPointCount; i++)
+            var start = -groupSlotWidth / 2f;
+            var delta = groupSlotWidth / (activatedSlotPointCount - 1);
+            for (int i = 0; i < activatedSlotPointCount; i++)
             {
                 var slotPoint = slotPoints[i];
-                slotPoint.transform.localPosition = Vector3.right * (i - (activatedSlotPointCount - 1) / 2f) * 0.5f;
-            }*/
+                slotPoint.transform.localPosition = Vector3.right * (start + i * delta);
+            }
         }
 
         protected override IEnumerator FillItem(Item item, int index)

@@ -18,10 +18,5 @@ namespace FloatSakujyo.Level
         {
             Destroy(gameObject);
         }
-
-        public virtual bool TryTakeItem(Item item)
-        {
-            return false;
-        }
     }
 }

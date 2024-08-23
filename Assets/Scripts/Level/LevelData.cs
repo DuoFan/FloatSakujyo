@@ -27,17 +27,10 @@ namespace FloatSakujyo.Level
         ItemColor[] customColorGroupQueue;
         public ItemColor[] CustomColorGroupQueue => customColorGroupQueue;
 
-        [SerializeField, Header("新生代,沉底的物品数量")]
-        int edenItemCount = 5;
-        public int EdenItemCount => edenItemCount;
 
-        [SerializeField, Header("中间代,中部的物品数量")]
-        int midItemCount = 5;
-        public int MidItemCount => midItemCount;
-
-        [SerializeField, Header("老年代,漂浮的物品数量")]
-        int oldItemCount = 10;
-        public int OldItemCount => oldItemCount;
+        [SerializeField, Header("漂浮的物品数量")]
+        int itemCount = 10;
+        public int ItemCount => itemCount;
 
         public void Init(int id, LevelItemColorGroupData[] screwColorGroupDatas, bool isCustomColorGroup, ItemColor[] customColorGroupQueue)
         {

@@ -76,7 +76,7 @@ namespace FloatSakujyo.Game
                     var _itemColor = ColorGroupQueues[i];
                     for (int j = 0; j < ColorGroupSlots.Length; j++)
                     {
-                        if (ColorGroupSlots[j] != null && ColorGroupSlots[j].ItemColor == _itemColor)
+                        if (ColorGroupSlots[j] != null && ColorGroupSlots[j].ItemColor == _itemColor && ColorGroupSlots[j].HasEmptySlot())
                         {
                             isOk = false;
                             break;

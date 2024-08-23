@@ -75,19 +75,14 @@ namespace FloatSakujyo.UI
 
             sequence.Join(item.transform.DOLocalRotateQuaternion(Quaternion.Euler(0, 10, 0), time));
             sequence.Join(item.transform.DOLocalMove(Vector3.up, time));
-
-            var scale = GetWorldScale(colorGroupSlotView.transform) * 1.05f;
-            var scale2 = GetWorldScale(point);
-            scale = new Vector3(scale.x / scale2.x, scale.y / scale2.y, scale.z / scale2.z);
-
-            sequence.Join(item.transform.DOScale(scale, time));
+            sequence.Join(item.transform.DOScale(Vector3.one, time));
 
             time = 0.1f;
 
-            sequence.Append(item.transform.DOLocalMove(Vector3.up, time));
+            sequence.Append(item.transform.DOLocalMove(Vector3.up * 0.178f, time));
 
             time = 0.2f;
-            sequence.Join(item.transform.DORotateQuaternion(Quaternion.identity, time));
+            sequence.Join(item.transform.DORotateQuaternion(Quaternion.Euler(0,180,0), time));
 
             yield return new WaitForSecondsRealtime(time / 2f);
 

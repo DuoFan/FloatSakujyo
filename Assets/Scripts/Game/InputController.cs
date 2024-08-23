@@ -60,7 +60,7 @@ namespace FloatSakujyo.Game
                         return null;
                     }
                     var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    if (Physics.Raycast(ray, out var hit, 1000, Const.ITEM_LAYER_MASK))
+                    if (Physics.Raycast(ray, out var hit, 1000, Const.ITEM_LAYER_MASK | Const.WATER_LAYER_MASK, QueryTriggerInteraction.Collide))
                     {
                         return hit.collider.GetComponent<Item>();
                     }
@@ -106,7 +106,7 @@ namespace FloatSakujyo.Game
                         if (!isDragging)
                         {
                             var ray = Camera.main.ScreenPointToRay(touch.position);
-                            if (Physics.Raycast(ray, out var hit, 1000, Const.ITEM_LAYER_MASK))
+                            if (Physics.Raycast(ray, out var hit, 1000, Const.ITEM_LAYER_MASK | Const.WATER_LAYER_MASK, QueryTriggerInteraction.Collide))
                             {
                                 return hit.collider.GetComponent<Item>();
                             }
