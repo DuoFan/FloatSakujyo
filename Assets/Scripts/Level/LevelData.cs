@@ -27,18 +27,25 @@ namespace FloatSakujyo.Level
         ItemColor[] customColorGroupQueue;
         public ItemColor[] CustomColorGroupQueue => customColorGroupQueue;
 
+        [SerializeField]
+        LevelDifficultyData[] levelDifficultyDatas;
+        public LevelDifficultyData[] LevelDifficultyDatas => levelDifficultyDatas;
+
 
         [SerializeField, Header("漂浮的物品数量")]
-        int itemCount = 10;
-        public int ItemCount => itemCount;
+        int floatItemCount = 10;
+        public int FloatItemCount => floatItemCount;
 
-        public void Init(int id, LevelItemColorGroupData[] screwColorGroupDatas, bool isCustomColorGroup, ItemColor[] customColorGroupQueue)
+        public void Init(int id, LevelItemColorGroupData[] itemColorGroupDatas, bool isCustomColorGroup, ItemColor[] customColorGroupQueue,
+            LevelDifficultyData[] levelDifficultyDatas, int floatItemCount)
         {
             this.id = id;
 
-            this.itemColorGroupDatas = screwColorGroupDatas;
+            this.itemColorGroupDatas = itemColorGroupDatas;
             this.isCustomColorGroup = isCustomColorGroup;
             this.customColorGroupQueue = customColorGroupQueue;
+            this.levelDifficultyDatas = levelDifficultyDatas;
+            this.floatItemCount = floatItemCount;
         }
     }
 }

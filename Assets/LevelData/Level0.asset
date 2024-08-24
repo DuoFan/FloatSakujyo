@@ -15,11 +15,16 @@ MonoBehaviour:
   id: 0
   itemColorGroupDatas:
   - itemColor: 1
-    groupCount: 5
+    groupCount: 10
   - itemColor: 2
     groupCount: 5
   - itemColor: 3
     groupCount: 5
+  - itemColor: 4
+    groupCount: 5
+  - itemColor: 5
+    groupCount: 5
   isCustomColorGroup: 0
   customColorGroupQueue: 
-  itemCount: 9
+  levelDifficultyDatas: []
+  floatItemCount: 27

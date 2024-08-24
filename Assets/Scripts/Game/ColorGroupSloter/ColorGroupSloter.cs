@@ -23,7 +23,7 @@ namespace FloatSakujyo.Game
 
         bool isGroupDefaultUseable;
 
-        public ColorGroupSloter(List<ItemColor> colorGroupQueues, bool isGroupDefaultUseable)
+        public ColorGroupSloter(List<ItemColor> colorGroupQueues, int defaultNoneGroupSlotCount, bool isGroupDefaultUseable)
         {
             ColorGroupQueues = colorGroupQueues;
             ColorGroupSlots = new ColorGroupSlot[3];
@@ -33,7 +33,7 @@ namespace FloatSakujyo.Game
             backupItems = new Dictionary<ItemColor, List<Item>>();
 
             //空颜色有5个槽位
-            ColorGroupSlots[NONE_COLOR_GROUP_SLOT_INDEX] = new ColorGroupSlot(ItemColor.None, 5, isGroupDefaultUseable);
+            ColorGroupSlots[NONE_COLOR_GROUP_SLOT_INDEX] = new ColorGroupSlot(ItemColor.None, defaultNoneGroupSlotCount, isGroupDefaultUseable);
             //初始化两组颜色
             for (int i = 0; i < 2; i++)
             {
@@ -122,7 +122,7 @@ namespace FloatSakujyo.Game
                     slot.CompleteFillItem();
                     screwList.RemoveAt(i);
                 }
-                if(screwList.Count <= 0)
+                if (screwList.Count <= 0)
                 {
                     backupItems.Remove(slot.ItemColor);
                 }
@@ -247,7 +247,7 @@ namespace FloatSakujyo.Game
                                     colorGroupSlot.CompleteFillItem();
                                     if (isFilled)
                                     {
-                                        if(colorGroupSlot.FillingItemCount > 0)
+                                        if (colorGroupSlot.FillingItemCount > 0)
                                         {
                                             yield return new WaitUntil(() => colorGroupSlot.FillingItemCount <= 0);
                                         }

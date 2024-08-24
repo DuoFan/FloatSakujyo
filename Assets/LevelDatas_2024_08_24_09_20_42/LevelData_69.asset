@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60a4c053cb5dc1241a92d613f28d30c6, type: 3}
+  m_Name: LevelData_69
+  m_EditorClassIdentifier: 
+  id: 69
+  itemColorGroupDatas:
+  - itemColor: 1
+    groupCount: 6
+  - itemColor: 2
+    groupCount: 6
+  - itemColor: 3
+    groupCount: 6
+  - itemColor: 4
+    groupCount: 6
+  - itemColor: 5
+    groupCount: 6
+  - itemColor: 6
+    groupCount: 6
+  - itemColor: 7
+    groupCount: 6
+  - itemColor: 8
+    groupCount: 6
+  - itemColor: 9
+    groupCount: 6
+  - itemColor: 10
+    groupCount: 6
+  - itemColor: 11
+    groupCount: 6
+  isCustomColorGroup: 0
+  customColorGroupQueue: 
+  levelDifficultyDatas:
+  - leftGroupCount: 0
+    maxRandomEasyValue: 0
+    n_HardThenEasy: 0
+    maxEasyGroupCount: 0
+  - leftGroupCount: 0
+    maxRandomEasyValue: 0
+    n_HardThenEasy: 0
+    maxEasyGroupCount: 0
+  - leftGroupCount: 0
+    maxRandomEasyValue: 0
+    n_HardThenEasy: 0
+    maxEasyGroupCount: 0
+  - leftGroupCount: 0
+    maxRandomEasyValue: 0
+    n_HardThenEasy: 0
+    maxEasyGroupCount: 0
+  - leftGroupCount: 0
+    maxRandomEasyValue: 0
+    n_HardThenEasy: 0
+    maxEasyGroupCount: 0
+  - leftGroupCount: 0
+    maxRandomEasyValue: 0
+    n_HardThenEasy: 0
+    maxEasyGroupCount: 0
+  floatItemCount: 27

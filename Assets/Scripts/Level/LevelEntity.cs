@@ -26,7 +26,7 @@ namespace FloatSakujyo.Level
         {
             LevelData = levelData;
 
-            ColorGroupSloter = LevelUtils.GenerateColorQueueSloter(levelData, true, out var _colorGroupQueues);
+            ColorGroupSloter = LevelUtils.GenerateColorQueueSloter(levelData, 6, true, out var _colorGroupQueues);
 
             colorGroupQueues = new Queue<ItemColor>(_colorGroupQueues);
 

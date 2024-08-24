@@ -14,7 +14,9 @@ namespace FloatSakujyo.UI
         protected ColorGroupSlotView colorGroupSlotView;
 
         [SerializeField]
-        Vector3 fillLocalPosition;
+        protected Vector3 fillLocalPosition;
+        [SerializeField]
+        protected Vector3 fillLocalEulerAngle;
 
         [SerializeField]
         protected Transform[] slotPoints;
@@ -74,9 +76,11 @@ namespace FloatSakujyo.UI
 
             item.transform.SetParent(point);
 
+            item.ShowTrail();
+
             var sequence = DOTween.Sequence();
 
-            sequence.Join(item.transform.DOLocalRotateQuaternion(Quaternion.Euler(0, 10, 0), time));
+            sequence.Join(item.transform.DOLocalRotate(Quaternion.Euler(0, 10, 0) * fillLocalEulerAngle, time));
             sequence.Join(item.transform.DOLocalMove(Vector3.up, time));
             sequence.Join(item.transform.DOScale(Vector3.one, time));
 
@@ -85,7 +89,7 @@ namespace FloatSakujyo.UI
             sequence.Append(item.transform.DOLocalMove(fillLocalPosition, time));
 
             time = 0.2f;
-            sequence.Join(item.transform.DORotateQuaternion(Quaternion.Euler(0,180,0), time));
+            sequence.Join(item.transform.DOLocalRotate(fillLocalEulerAngle, time));
 
             yield return new WaitForSecondsRealtime(time / 2f);
 

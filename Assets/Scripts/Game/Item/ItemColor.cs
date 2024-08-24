@@ -15,6 +15,10 @@ namespace FloatSakujyo.Game
         Color8 = 8,
         Color9 = 9,
         Color10 = 10,
+        Color11 = 11,
+        Color12 = 12,
+        Color13 = 13,
+        Color14 = 14,
         End = 11
     }
 }

@@ -1,3 +1,4 @@
+using GameExtension;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -6,6 +7,9 @@ namespace FloatSakujyo.Game
 {
     public class Item : MonoBehaviour
     {
+        [SerializeField]
+        TrailRenderer trail;
+
         [SerializeField]
         protected ItemColor itemColor;
         public ItemColor ItemColor => itemColor;
@@ -38,6 +42,11 @@ namespace FloatSakujyo.Game
         public void EnablePhysics()
         {
             Rigidbody.isKinematic = false;
+        }
+
+        public void ShowTrail()
+        {
+            trail.gameObject.CheckActiveSelf(true);
         }
     }
 }

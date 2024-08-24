@@ -11,6 +11,9 @@ namespace FloatSakujyo.Game
         [SerializeField]
         float waterLevel;
         [SerializeField]
+        Transform waterLevelTransform;
+
+        [SerializeField]
         private float buoyancyForce;
 
         [SerializeField]
@@ -18,7 +21,8 @@ namespace FloatSakujyo.Game
         [SerializeField]
         float waveAmplitude;
 
-        List<Rigidbody> rigidbodies;
+        List<Rigidbody> rigidbodies = new List<Rigidbody>();
+        List<Mesh> meshes = new List<Mesh>();
 
         Vector3[] vertices = new Vector3[8];
 
@@ -29,21 +33,16 @@ namespace FloatSakujyo.Game
 
         public void AddRigidbody(Rigidbody rigidbody)
         {
-            if(rigidbodies == null)
-            {
-                rigidbodies = new List<Rigidbody>();
-            }
             rigidbodies.Add(rigidbody);
+            meshes.Add(rigidbody.GetComponent<MeshFilter>().sharedMesh);
             rigidbody.transform.SetParent(transform);
         }
 
         public void RemoveRigidbody(Rigidbody rigidbody)
         {
-            if (rigidbodies == null)
-            {
-                return;
-            }
-            rigidbodies.Remove(rigidbody);
+            var index = rigidbodies.IndexOf(rigidbody);
+            rigidbodies.RemoveAt(index);
+            meshes.RemoveAt(index);
         }
 
         private void FixedUpdate()
@@ -54,11 +53,12 @@ namespace FloatSakujyo.Game
             }
 
             var waterLevel = CalculateWaterLevel();
+            waterLevelTransform.transform.position = new Vector3(waterLevelTransform.position.x, waterLevel, waterLevelTransform.position.z);
             for (int i = 0; i < rigidbodies.Count; i++)
             {
                 var rigidbody = rigidbodies[i];
 
-                var mesh = rigidbody.GetComponent<MeshFilter>().sharedMesh;
+                var mesh = meshes[i];
                 var bounds = mesh.bounds;
                 
                 vertices[0] = rigidbody.transform.TransformPoint(bounds.min);

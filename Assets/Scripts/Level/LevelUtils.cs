@@ -27,7 +27,7 @@ namespace FloatSakujyo.Level
             return handle;
         }
 
-        public static ColorGroupSloter GenerateColorQueueSloter(LevelData levelData, bool isGroupDefalutUseable,out List<ItemColor> colorGroupQueues)
+        public static ColorGroupSloter GenerateColorQueueSloter(LevelData levelData, int defaultNoneGroupSlotCount, bool isGroupDefalutUseable,out List<ItemColor> colorGroupQueues)
         {
             if (levelData.IsCustomColorGroup && levelData.ItemColorGroupDatas.Length > 0)
             {
@@ -64,7 +64,7 @@ namespace FloatSakujyo.Level
                     colorGroupCount--;
                 }
             }
-            return new ColorGroupSloter(new List<ItemColor>(colorGroupQueues), isGroupDefalutUseable);
+            return new ColorGroupSloter(new List<ItemColor>(colorGroupQueues), defaultNoneGroupSlotCount, isGroupDefalutUseable);
         }
 
         public static int RoundToInt(float value)

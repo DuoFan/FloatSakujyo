@@ -50,6 +50,9 @@ namespace FloatSakujyo.Game
         [SerializeField]
         WaterLevel waterLevel;
 
+        [SerializeField]
+        float waveInterval;
+
         bool isFaild;
         bool isCompleted;
 
@@ -90,6 +93,8 @@ namespace FloatSakujyo.Game
 
             InitColorGroupSlotView();
 
+            waterLevel.Init(waveInterval);
+
             var levelData = LevelDataManager.Instance.GetData(0);
             StartCoroutine(StartLevel(levelData));
         }
@@ -108,9 +113,14 @@ namespace FloatSakujyo.Game
 
         void InitCamera()
         {
-            var position = new Vector3(0, 27.6f, -10);
+            /*var position = new Vector3(0, 27.6f, -10);
             CameraController.Instance.SetPosition(position);
             var rotation = Quaternion.Euler(new Vector3(60, 0, 0));
+            CameraController.Instance.SetRotation(rotation);*/
+
+            var position = new Vector3(0, 45, -10);
+            CameraController.Instance.SetPosition(position);
+            var rotation = Quaternion.Euler(new Vector3(70, 0, 0));
             CameraController.Instance.SetRotation(rotation);
 
             var runtimeCameraOrthoSize = refCameraOrthoSize.x + runtimeAspectRatio * (refCameraOrthoSize.y - refCameraOrthoSize.x);
@@ -149,11 +159,11 @@ namespace FloatSakujyo.Game
 
             levelPanel.ResetHelperItems();*/
 
-            var edenItems = LevelEntity.SpawnItems(levelData.ItemCount, ItemGeneration.Eden);
-            var oldItems = LevelEntity.SpawnItems(levelData.ItemCount, ItemGeneration.Old);
+            var edenItems = LevelEntity.SpawnItems(levelData.FloatItemCount, ItemGeneration.Eden);
+            var oldItems = LevelEntity.SpawnItems(levelData.FloatItemCount, ItemGeneration.Old);
             var itemBounds = oldItems[0].GetComponent<Collider>().bounds;
 
-            itemGrids = CalculateGrids(levelData.ItemCount, itemBounds, positionArea);
+            itemGrids = CalculateGrids(levelData.FloatItemCount, itemBounds, positionArea);
 
             for (int i = 0; i < oldItems.Length; i++)
             {
@@ -384,13 +394,15 @@ namespace FloatSakujyo.Game
 
             bool isSlotFilled = !slot.HasEmptySlot();
 
+            waterLevel.PlaySplash(item.transform.position);
+
             slot.FillItem(item, index, out var fillAnimation);
             yield return fillAnimation;
             slot.CompleteFillItem();
 
 
             LevelEntity.itemCount--;
-            if (LevelEntity.itemCount >= LevelEntity.LevelData.ItemCount * 2 && randomItemGrid != null)
+            if (LevelEntity.itemCount >= LevelEntity.LevelData.FloatItemCount * 2 && randomItemGrid != null)
             {
                 var newEdenItem = LevelEntity.SpawnItems(1, ItemGeneration.Eden)[0];
                 InitItem(newEdenItem, randomItemGrid);

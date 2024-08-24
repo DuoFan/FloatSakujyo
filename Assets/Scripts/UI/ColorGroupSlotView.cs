@@ -114,7 +114,14 @@ namespace FloatSakujyo.UI
                 {
                     Sloter.AddGeneratingSlotGroup();
                     CreateSlotForIndex(i);
-                    slotUIs[i].transform.localPosition = slotUILocalPoses[1] + Vector3.left * 5;
+                    if(i <= slotUILocalPoses.Length / 2)
+                    {
+                        slotUIs[i].transform.localPosition = slotUILocalPoses[1] + Vector3.left * 5;
+                    }
+                    else
+                    {
+                        slotUIs[i].transform.localPosition = slotUILocalPoses[slotUILocalPoses.Length - 1] + Vector3.right * 5;
+                    }
                     slotUIs[i].Init(slot);
                     slot.SetUseable(false);
                     StartCoroutine(WaitForSlotUIEntered(slotUIs[i], slot, slotUILocalPoses[i]));

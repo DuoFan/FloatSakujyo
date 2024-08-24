@@ -67,7 +67,20 @@ namespace FloatSakujyo.UI
 
         protected override IEnumerator FillItem(Item item, int index)
         {
+            var point = slotPoints[index];
+            var shadowSpriteRenderer = point.Find("Shadow")?.GetComponent<SpriteRenderer>();
+            if (shadowSpriteRenderer != null)
+            {
+                shadowSpriteRenderer.gameObject.CheckActiveSelf(true);
+                var color = shadowSpriteRenderer.color;
+                var a = color.a;
+                color.a = 0;
+                shadowSpriteRenderer.color = color;
+                shadowSpriteRenderer.DOFade(a, 0.2f).SetDelay(0.3f);
+            }
+
             yield return base.FillItem(item, index);
+
             filledText.text = $"{Slot.TotalSlotCount - Slot.EmptySlotCount}/{Slot.TotalSlotCount}";
         }
 
@@ -88,7 +101,7 @@ namespace FloatSakujyo.UI
             //GameUIManager.Instance.PlayFlyGold(goldStart);
 
             //盖子动画时间
-            yield return new WaitForSecondsRealtime(0.15f);
+            yield return new WaitForSecondsRealtime(0.25f);
 
             for (int i = 0; i < slotPoints.Length; i++)
             {
