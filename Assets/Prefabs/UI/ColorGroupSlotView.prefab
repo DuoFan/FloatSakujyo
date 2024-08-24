@@ -130,13 +130,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf59caddbd71ef46b9c46605f47aa39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fillLocalPosition: {x: 0, y: 0, z: 0}
   slotPoints:
   - {fileID: 2445515818709309310}
   - {fileID: 4635171108984500035}
   - {fileID: 2847473112238761137}
   boxRenderer: {fileID: 1673926306110995345}
-  coverRenderer: {fileID: 0}
   btn: {fileID: 0}
+  filledText: {fileID: 0}
   animator: {fileID: 0}
 --- !u!1 &1283804411850876245
 GameObject:
@@ -270,6 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc8835b571a0df349b2f2a64d77ae016, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fillLocalPosition: {x: 0, y: 0.23, z: -0.395}
   slotPoints:
   - {fileID: 8626485723590639461}
   - {fileID: 4889134072255532161}
@@ -407,13 +409,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf59caddbd71ef46b9c46605f47aa39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fillLocalPosition: {x: 0, y: 0, z: 0}
   slotPoints:
   - {fileID: 6529508129394201962}
   - {fileID: 4041761238674788419}
   - {fileID: 4005374875118602435}
   boxRenderer: {fileID: 7448209418760990362}
-  coverRenderer: {fileID: 0}
   btn: {fileID: 0}
+  filledText: {fileID: 0}
   animator: {fileID: 0}
 --- !u!1 &2979151342785311635
 GameObject:
@@ -545,13 +548,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf59caddbd71ef46b9c46605f47aa39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fillLocalPosition: {x: 0, y: 0, z: 0}
   slotPoints:
   - {fileID: 2103299081633591520}
   - {fileID: 3471245678818691736}
   - {fileID: 9140031916336767506}
   boxRenderer: {fileID: 8739318996492139590}
-  coverRenderer: {fileID: 0}
   btn: {fileID: 0}
+  filledText: {fileID: 0}
   animator: {fileID: 0}
 --- !u!1 &3491135240752505969
 GameObject:
@@ -927,13 +931,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf59caddbd71ef46b9c46605f47aa39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fillLocalPosition: {x: 0, y: 0, z: 0}
   slotPoints:
   - {fileID: 3077303135210010984}
   - {fileID: 1697856220868406428}
   - {fileID: 5186115623130735681}
   boxRenderer: {fileID: 8197244523102358768}
-  coverRenderer: {fileID: 0}
   btn: {fileID: 0}
+  filledText: {fileID: 0}
   animator: {fileID: 0}
 --- !u!1 &6547732569767148334
 GameObject:
@@ -1034,13 +1039,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf59caddbd71ef46b9c46605f47aa39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fillLocalPosition: {x: 0, y: 0, z: 0}
   slotPoints:
   - {fileID: 2132611642063214002}
   - {fileID: 1966733378895432840}
   - {fileID: 280531693332146670}
   boxRenderer: {fileID: 1434285642466893248}
-  coverRenderer: {fileID: 0}
   btn: {fileID: 0}
+  filledText: {fileID: 0}
   animator: {fileID: 0}
 --- !u!1 &7976343354600424509
 GameObject:

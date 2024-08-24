@@ -606,6 +606,7 @@ namespace AllIn1SpriteShader
             Debug.Log("Render Image saved to: " + fullPath + " with scale: " + scaleSlider + " (it can be changed in Window -> AllIn1ShaderWindow)");
             return true;
 #endif
+            return false;
         }
 
         private string GetNewValidPath(string path, int i = 1)

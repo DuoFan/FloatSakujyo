@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 45100724}
   - component: {fileID: 45100723}
   m_Layer: 0
-  m_Name: AddressableManager
+  m_Name: 'AddressableManager '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f20f637ffb3108a47b61ca32188c2978, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nativeAddressableConfig: {fileID: 0}
+  nativeAddressableConfig: {fileID: 11400000, guid: ee6fdf969fa97574a9f9a20fe3b83692, type: 2}
 --- !u!4 &45100724
 Transform:
   m_ObjectHideFlags: 0

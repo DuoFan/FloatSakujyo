@@ -14,6 +14,9 @@ namespace FloatSakujyo.UI
         protected ColorGroupSlotView colorGroupSlotView;
 
         [SerializeField]
+        Vector3 fillLocalPosition;
+
+        [SerializeField]
         protected Transform[] slotPoints;
 
         public ColorGroupSlot Slot { get; protected set; }
@@ -79,7 +82,7 @@ namespace FloatSakujyo.UI
 
             time = 0.1f;
 
-            sequence.Append(item.transform.DOLocalMove(Vector3.up * 0.178f, time));
+            sequence.Append(item.transform.DOLocalMove(fillLocalPosition, time));
 
             time = 0.2f;
             sequence.Join(item.transform.DORotateQuaternion(Quaternion.Euler(0,180,0), time));

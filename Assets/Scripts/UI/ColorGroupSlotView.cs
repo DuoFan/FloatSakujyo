@@ -36,7 +36,7 @@ namespace FloatSakujyo.UI
             var delta = width / (slotUIs.Length - 2f);
             for (int i = 1; i < slotUIs.Length; i++)
             {
-                slotUIs[i].transform.localPosition = new Vector3(startX + (i - 1) * delta, 2, 3.75f);
+                slotUIs[i].transform.localPosition = new Vector3(startX + (i - 1) * delta, 2, 2.7f);
             }
 
             for (int i = 0; i < slotUIs.Length; i++)
