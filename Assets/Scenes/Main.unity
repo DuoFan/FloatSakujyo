@@ -517,6 +517,8 @@ MonoBehaviour:
     priority: 0
   - gameObject: {fileID: 2418290044822180403, guid: e87a547b8cb891540a4c43cbc46e8c00, type: 3}
     priority: 0
+  - gameObject: {fileID: 61001465426189925, guid: 486c3ab0cf4ceb947b33bfe525340e40, type: 3}
+    priority: 0
   loadSheetDataTasks: []
 --- !u!1 &2083170284
 GameObject:

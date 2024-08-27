@@ -37,11 +37,13 @@ namespace FloatSakujyo.Game
         public void DisablePhysics()
         {
             Rigidbody.isKinematic = true;
+            GetComponent<Collider>().enabled = false;
         }
 
         public void EnablePhysics()
         {
             Rigidbody.isKinematic = false;
+            GetComponent<Collider>().enabled = true;
         }
 
         public void ShowTrail()

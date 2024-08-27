@@ -276,7 +276,7 @@ namespace FloatSakujyo.Game
 
         private void InitItem(Item item,ItemGrid grid)
         {
-            float height = 1;
+            float height = 1.5f;
             item.transform.position = new Vector3(grid.Position.x, height, grid.Position.y);
             item.transform.eulerAngles = Vector3.up * UnityEngine.Random.Range(0, 360f) + Vector3.forward * 90;
 
@@ -478,6 +478,16 @@ namespace FloatSakujyo.Game
             isFaild = false;
             //有可能在失败后填满了某一个盒子
             LevelEntity.ColorGroupSloter.TryCompleteSlot();
+        }
+
+        public void CompleteGroup()
+        {
+
+        }
+
+        public void Rearrange()
+        {
+
         }
 
         public void ClearNoneSlotGroupForRestore()
