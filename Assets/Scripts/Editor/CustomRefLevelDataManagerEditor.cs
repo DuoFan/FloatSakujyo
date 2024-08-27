@@ -39,13 +39,14 @@ namespace FloatSakujyo.Editor
         void CreateLevelDatas()
         {
             AssetDatabase.StartAssetEditing();
-            var folderPath = $"LevelDatas_{DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss")}";
+            var folderPath = $"LevelDatas_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}";
             AssetDatabase.CreateFolder("Assets", folderPath);
             folderPath = $"Assets/{folderPath}";
             var refLevelDatas = JsonConvert.DeserializeObject<RefLevelData[]>(levelJson.text);
 
             int maxItemColorCount = 0;
             int levelID = 1;
+            HashSet<int> itemIDs = new HashSet<int>();
             for (int i = 0; i < refLevelDatas.Length; i++)
             {
                 var floatItemCount = refLevelDatas[i].data.Sum(x => x > 0 ? 1 : 0);
@@ -79,12 +80,23 @@ namespace FloatSakujyo.Editor
                 LevelDifficultyData[] levelDifficultyDatas = new LevelDifficultyData[refLevelDatas[i].easyOrder.Length];
                 for (int j = 0; j < levelDifficultyDatas.Length; j++)
                 {
-                    int leftGroupCount = refLevelDatas[i].easyOrder[j][0] / 3;
-                    int maxRandomValue = refLevelDatas[i].easyOrder[j][1];
-                    int n_HardThenEasy = refLevelDatas[i].easyInsurance[j][1] / 3;
-                    int maxEasyGroupCount = refLevelDatas[i].easyInsurance2[j][1] / 3;
-                    LevelDifficultyData levelDifficultyData = new LevelDifficultyData(leftGroupCount, maxRandomValue, n_HardThenEasy, maxEasyGroupCount);
+                    int leftItemCount = refLevelDatas[i].easyOrder[j][0];
+                    int maxGroupRandomValue = refLevelDatas[i].easyOrder[j][1];
+                    int n_MinThenMaxGroup = refLevelDatas[i].easyInsurance[j][1];
+                    int maxSeriesMaxGroupCount = refLevelDatas[i].easyInsurance2[j][1];
+
+                    int maxItemRandomValue = refLevelDatas[i].easyOrder[j][1];
+                    int n_RandomThenMaxItem = refLevelDatas[i].easyInsurance[j][1];
+                    int maxSeriesMaxItemCount = refLevelDatas[i].easyInsurance2[j][1];
+
+                    LevelDifficultyData levelDifficultyData = new LevelDifficultyData(leftItemCount, maxGroupRandomValue, n_MinThenMaxGroup,
+                        maxSeriesMaxGroupCount, maxItemRandomValue, n_RandomThenMaxItem, maxSeriesMaxItemCount);
                     levelDifficultyDatas[j] = levelDifficultyData;
+                }
+
+                for (int j = 0; j < refLevelDatas[i].itemId.Length; j++)
+                {
+                    itemIDs.Add(refLevelDatas[i].itemId[j]);
                 }
 
                 levelData.Init(levelID, levelItemColorGroupDatas, false, null, levelDifficultyDatas, floatItemCount);
@@ -98,6 +110,10 @@ namespace FloatSakujyo.Editor
 
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("最大物品颜色数量：" + maxItemColorCount);
+
+            var itemIDArray = itemIDs.ToArray();
+            Array.Sort(itemIDArray);
+            stringBuilder.AppendLine("物品ID：" + string.Join(",", itemIDArray));
 
             Debug.Log(stringBuilder.ToString());
 

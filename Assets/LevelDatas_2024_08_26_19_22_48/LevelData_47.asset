@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60a4c053cb5dc1241a92d613f28d30c6, type: 3}
+  m_Name: LevelData_47
+  m_EditorClassIdentifier: 
+  id: 47
+  itemColorGroupDatas:
+  - itemColor: 1
+    groupCount: 5
+  - itemColor: 2
+    groupCount: 5
+  - itemColor: 3
+    groupCount: 5
+  - itemColor: 4
+    groupCount: 5
+  - itemColor: 5
+    groupCount: 5
+  - itemColor: 6
+    groupCount: 5
+  - itemColor: 7
+    groupCount: 5
+  - itemColor: 8
+    groupCount: 5
+  - itemColor: 9
+    groupCount: 5
+  - itemColor: 10
+    groupCount: 5
+  - itemColor: 11
+    groupCount: 5
+  - itemColor: 12
+    groupCount: 5
+  - itemColor: 13
+    groupCount: 6
+  isCustomColorGroup: 0
+  customColorGroupQueue: 
+  levelDifficultyDatas:
+  - leftItemCount: 198
+    maxGroupRandomValue: 100
+    n_MinThenMaxGroup: 1
+    maxSeriesMaxGroupCount: 2
+    maxItemRandomValue: 100
+    n_RandomThenMaxItem: 1
+    maxSeriesMaxItemCount: 2
+  - leftItemCount: 117
+    maxGroupRandomValue: 0
+    n_MinThenMaxGroup: 2
+    maxSeriesMaxGroupCount: 1
+    maxItemRandomValue: 0
+    n_RandomThenMaxItem: 2
+    maxSeriesMaxItemCount: 1
+  - leftItemCount: 102
+    maxGroupRandomValue: 100
+    n_MinThenMaxGroup: 1
+    maxSeriesMaxGroupCount: 3
+    maxItemRandomValue: 100
+    n_RandomThenMaxItem: 1
+    maxSeriesMaxItemCount: 3
+  - leftItemCount: 51
+    maxGroupRandomValue: 0
+    n_MinThenMaxGroup: 4
+    maxSeriesMaxGroupCount: 1
+    maxItemRandomValue: 0
+    n_RandomThenMaxItem: 4
+    maxSeriesMaxItemCount: 1
+  - leftItemCount: 30
+    maxGroupRandomValue: 100
+    n_MinThenMaxGroup: 1
+    maxSeriesMaxGroupCount: 2
+    maxItemRandomValue: 100
+    n_RandomThenMaxItem: 1
+    maxSeriesMaxItemCount: 2
+  floatItemCount: 36

@@ -308,6 +308,74 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mCamera: {fileID: 1729093640}
+--- !u!1 &1439117183
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1439117186}
+  - component: {fileID: 1439117185}
+  - component: {fileID: 1439117184}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1439117184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439117183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &1439117185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439117183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &1439117186
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439117183}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1729093638
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,9 +505,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectInstantiateTasks:
+  - gameObject: {fileID: 4216039216365992812, guid: d1fd3b76c7f89d248b49d183a199883f, type: 3}
+    priority: 1
   - gameObject: {fileID: 1769345199007948038, guid: 142121d8938d68a419a6509f4420b1f6, type: 3}
     priority: 0
   - gameObject: {fileID: 1122534788846693300, guid: 470813cadf0b6824faefc7c94026fbce, type: 3}
+    priority: 0
+  - gameObject: {fileID: 2963646565450521132, guid: cfa5f9a1575dde64290d16cb297048df, type: 3}
+    priority: 0
+  - gameObject: {fileID: 8032468613533795900, guid: d762c2d888c6d224c900208974a3dbc5, type: 3}
+    priority: 0
+  - gameObject: {fileID: 2418290044822180403, guid: e87a547b8cb891540a4c43cbc46e8c00, type: 3}
     priority: 0
   loadSheetDataTasks: []
 --- !u!1 &2083170284

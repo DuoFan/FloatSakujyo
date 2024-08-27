@@ -156,7 +156,17 @@ namespace GameExtension
                 objs = new T[_objs.Length];
                 for (int i = 0; i < _objs.Length; i++)
                 {
-                    objs[i] = _objs[i] as T;
+
+                    if (typeof(T).Equals(typeof(Sprite)))
+                    {
+                        var texture2D = _objs[i] as Texture2D;
+                        var sprite = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), Vector2.one * 0.5f);
+                        objs[i] = sprite as T;
+                    }
+                    else
+                    {
+                        objs[i] = _objs[i] as T;
+                    }
                 }
                 return true;
             }

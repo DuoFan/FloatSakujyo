@@ -11,6 +11,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Reflection;
 
 namespace FloatSakujyo.UI
 {
@@ -31,6 +32,10 @@ namespace FloatSakujyo.UI
 
         public bool IsEnable => Slot != null;
 
+        [SerializeField]
+        ItemNeedView itemNeedView;
+        public ItemNeedView ItemNeedView => itemNeedView;
+
         public void Awake()
         {
             btn.onClick.AddListener(TryEnable);
@@ -42,6 +47,8 @@ namespace FloatSakujyo.UI
 
             btn.gameObject.CheckActiveSelf(false);
 
+            DeactivateAllShadow();
+
             for (int i = 0; i < Slot.Items.Length; i++)
             {
                 var item = Slot.Items[i];
@@ -50,38 +57,25 @@ namespace FloatSakujyo.UI
                     var point = slotPoints[i];
                     item.transform.SetParent(point);
 
-                    item.transform.localPosition = Vector3.zero;
-
-                    var scale = GetWorldScale(colorGroupSlotView.transform) * 1.05f;
-                    var scale2 = GetWorldScale(point);
-                    scale = new Vector3(scale.x / scale2.x, scale.y / scale2.y, scale.z / scale2.z);
-                    item.transform.localScale = scale;
-
-                    item.transform.rotation = Quaternion.Euler(-100, 0, 0);
+                    item.transform.localPosition = fillLocalPosition;
+                    item.transform.localScale = Vector3.one;
+                    item.transform.localEulerAngles = fillLocalEulerAngle;
                 }
             }
 
             filledText.text = $"{Slot.TotalSlotCount - Slot.EmptySlotCount}/{Slot.TotalSlotCount}";
+
+            StartCoroutine(colorGroupSlotView.PlayItemNeedViewEnter(this));
         }
 
 
         protected override IEnumerator FillItem(Item item, int index)
         {
-            var point = slotPoints[index];
-            var shadowSpriteRenderer = point.Find("Shadow")?.GetComponent<SpriteRenderer>();
-            if (shadowSpriteRenderer != null)
-            {
-                shadowSpriteRenderer.gameObject.CheckActiveSelf(true);
-                var color = shadowSpriteRenderer.color;
-                var a = color.a;
-                color.a = 0;
-                shadowSpriteRenderer.color = color;
-                shadowSpriteRenderer.DOFade(a, 0.2f).SetDelay(0.3f);
-            }
-
-            yield return base.FillItem(item, index);
+            ActivateShadow(index);
 
             filledText.text = $"{Slot.TotalSlotCount - Slot.EmptySlotCount}/{Slot.TotalSlotCount}";
+
+            yield return base.FillItem(item, index);
         }
 
         public override IEnumerator OnCompleted()
@@ -108,9 +102,17 @@ namespace FloatSakujyo.UI
                 GameObject.Destroy(slotPoints[i].gameObject);
             }
 
-            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f);
+            //yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f);
 
-            yield return transform.DOMove(transform.position + Vector3.up * 30, 0.2f).WaitForCompletion();
+            //yield return transform.DOMove(transform.position + Vector3.up * 30, 0.2f).WaitForCompletion();
+
+            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1);
+
+            gameObject.CheckActiveSelf(false);
+
+            yield return colorGroupSlotView.PlayItemNeedViewExit(this, selfIndex);
+
+            GameObject.Destroy(itemNeedView.gameObject);
 
             Destroy(gameObject);
         }
@@ -119,7 +121,38 @@ namespace FloatSakujyo.UI
         {
             base.Disable();
             boxRenderer.gameObject.CheckActiveSelf(false);
+            itemNeedView.gameObject.CheckActiveSelf(false);
             btn.gameObject.CheckActiveSelf(true);
+
+            DeactivateAllShadow();
+        }
+
+        void ActivateShadow(int index)
+        {
+            var point = slotPoints[index];
+            var shadowSpriteRenderer = point.Find("Shadow")?.GetComponent<SpriteRenderer>();
+            if (shadowSpriteRenderer != null)
+            {
+                shadowSpriteRenderer.gameObject.CheckActiveSelf(true);
+                var color = shadowSpriteRenderer.color;
+                var a = color.a;
+                color.a = 0;
+                shadowSpriteRenderer.color = color;
+                shadowSpriteRenderer.DOFade(a, 0.2f).SetDelay(0.3f);
+            }
+        }
+
+        void DeactivateAllShadow()
+        {
+            for (int i = 0; i < slotPoints.Length; i++)
+            {
+                var point = slotPoints[i];
+                var shadowSpriteRenderer = point.Find("Shadow")?.GetComponent<SpriteRenderer>();
+                if (shadowSpriteRenderer != null)
+                {
+                    shadowSpriteRenderer.gameObject.CheckActiveSelf(false);
+                }
+            }
         }
 
         public void TryEnable()

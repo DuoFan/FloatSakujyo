@@ -48,6 +48,11 @@ namespace FloatSakujyo.Game
         {
             trail.gameObject.CheckActiveSelf(true);
         }
+
+        public void HideTrail()
+        {
+            trail.gameObject.CheckActiveSelf(false);
+        }
     }
 }
 

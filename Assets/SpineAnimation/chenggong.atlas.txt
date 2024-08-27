@@ -1,0 +1,83 @@
+
+chenggong.png
+size: 1988,1988
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bj
+  rotate: false
+  xy: 994, 1113
+  size: 599, 371
+  orig: 601, 373
+  offset: 1, 1
+  index: -1
+bj1
+  rotate: false
+  xy: 994, 740
+  size: 599, 371
+  orig: 601, 373
+  offset: 1, 1
+  index: -1
+gq
+  rotate: false
+  xy: 2, 994
+  size: 990, 990
+  orig: 1016, 1016
+  offset: 13, 13
+  index: -1
+gq1
+  rotate: false
+  xy: 2, 2
+  size: 990, 990
+  orig: 1016, 1016
+  offset: 13, 13
+  index: -1
+gz
+  rotate: false
+  xy: 1595, 778
+  size: 98, 154
+  orig: 98, 154
+  offset: 0, 0
+  index: -1
+hf
+  rotate: false
+  xy: 994, 1736
+  size: 938, 248
+  orig: 938, 248
+  offset: 0, 0
+  index: -1
+hf1
+  rotate: false
+  xy: 994, 1486
+  size: 938, 248
+  orig: 938, 248
+  offset: 0, 0
+  index: -1
+mao
+  rotate: true
+  xy: 1595, 934
+  size: 550, 326
+  orig: 550, 326
+  offset: 0, 0
+  index: -1
+mao1
+  rotate: false
+  xy: 994, 379
+  size: 396, 359
+  orig: 396, 359
+  offset: 0, 0
+  index: -1
+x
+  rotate: false
+  xy: 994, 291
+  size: 108, 86
+  orig: 108, 87
+  offset: 0, 1
+  index: -1
+xx
+  rotate: false
+  xy: 1392, 663
+  size: 78, 75
+  orig: 78, 75
+  offset: 0, 0
+  index: -1

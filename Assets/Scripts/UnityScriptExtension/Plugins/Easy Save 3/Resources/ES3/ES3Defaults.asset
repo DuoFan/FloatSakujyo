@@ -38,6 +38,8 @@ MonoBehaviour:
     - Coffee.UIParticle.Demo
     - Coffee.UIParticle.PerformanceDemo
     - Coffee.UIParticle.Tests
+    - spine-unity
+    - spine-unity-examples
     - StompyRobot.SRDebugger
     - StompyRobot.SRF
     - Wx

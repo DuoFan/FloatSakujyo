@@ -94,6 +94,8 @@ namespace FloatSakujyo.UI
             yield return new WaitForSecondsRealtime(time / 2f);
 
             yield return sequence.WaitForCompletion();
+
+            item.HideTrail();
         }
 
         protected virtual void OnRemoveItem(Item item, int index)

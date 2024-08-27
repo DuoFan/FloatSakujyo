@@ -180,7 +180,7 @@ namespace GameExtension
 
         public void OpenPanel<T>(ref T panel, float duration = DEFAULT_PANEL_TIME) where T : UIPanel
         {
-            OpenPanel(GetUI(ref panel));
+            OpenPanel(GetUI(ref panel), duration);
         }
         public void ClosePanel<T>(ref T panel, float duration = DEFAULT_PANEL_TIME) where T : UIPanel
         {

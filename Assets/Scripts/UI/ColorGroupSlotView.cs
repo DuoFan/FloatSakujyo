@@ -27,6 +27,11 @@ namespace FloatSakujyo.UI
 
         public ColorGroupSloter Sloter { get; private set; }
 
+        [SerializeField]
+        bool[] isMoveRight;
+        public bool[] IsMoveRight => isMoveRight;
+
+        bool[] isCompleting;
 
         public void InitSlotUIPosition(float width)
         {
@@ -82,6 +87,8 @@ namespace FloatSakujyo.UI
                 }
             }
 
+            isCompleting = new bool[slotUIs.Length];
+
             _sloter.OnSlotCompleted += OnSlotCompleted;
             _sloter.OnSlotGenerated += OnSlotGenerated;
         }
@@ -100,42 +107,66 @@ namespace FloatSakujyo.UI
             {
                 if (slotUIs[i] != null && slotUIs[i].Slot == slot)
                 {
-                    StartCoroutine(slotUIs[i].OnCompleted());
+                    StartCoroutine(WaitForSlotUICompleted(slotUIs[i], i));
                     slotUIs[i] = null;
                     return;
                 }
             }
         }
+
+
+        IEnumerator WaitForSlotUICompleted(ColorGroupSlotUIBase slotUI,int index)
+        {
+            isCompleting[index] = true;
+
+            yield return slotUI.OnCompleted();
+
+            isCompleting[index] = false;
+        }
+
         private void OnSlotGenerated(ColorGroupSlot slot)
         {
-            for (int i = 0; i < slotUIs.Length; i++)
+            if (slot.HasEmptySlot())
             {
-                if (slotUIs[i] == null)
+                for (int i = 0; i < slotUIs.Length; i++)
                 {
-                    Sloter.AddGeneratingSlotGroup();
-                    CreateSlotForIndex(i);
-                    if(i <= slotUILocalPoses.Length / 2)
+                    if (slotUIs[i] == null)
                     {
-                        slotUIs[i].transform.localPosition = slotUILocalPoses[1] + Vector3.left * 5;
+                        Sloter.AddGeneratingSlotGroup();
+                        CreateSlotForIndex(i);
+                        if (IsMoveRight[i])
+                        {
+                            slotUIs[i].transform.localPosition = slotUILocalPoses[1] + Vector3.left * 5;
+                        }
+                        else
+                        {
+                            slotUIs[i].transform.localPosition = slotUILocalPoses[slotUILocalPoses.Length - 1] + Vector3.right * 5;
+                        }
+                        slot.SetUseable(false);
+                        StartCoroutine(WaitForSlotUIEntered(slotUIs[i], slot, slotUILocalPoses[i]));
+                        return;
                     }
-                    else
-                    {
-                        slotUIs[i].transform.localPosition = slotUILocalPoses[slotUILocalPoses.Length - 1] + Vector3.right * 5;
-                    }
-                    slotUIs[i].Init(slot);
-                    slot.SetUseable(false);
-                    StartCoroutine(WaitForSlotUIEntered(slotUIs[i], slot, slotUILocalPoses[i]));
-                    return;
                 }
-            }
 
-            var error = $"生成新组时找不到空余的槽位";
-            GameExtension.Logger.Error(error);
-            throw new Exception(error);
+                var error = $"生成新组时找不到空余的槽位";
+                GameExtension.Logger.Error(error);
+                throw new Exception(error);
+            }
+            else
+            {
+                Sloter.TryCompleteSlot();
+            }
         }
 
         IEnumerator WaitForSlotUIEntered(ColorGroupSlotUIBase slotUI, ColorGroupSlot slot, Vector3 pos)
         {
+            var index = Array.IndexOf(slotUIs, slotUI);
+            yield return new WaitUntil(() => !isCompleting[index]);
+
+            slotUI.Init(slot);
+
+            slot.SetUseable(false);
+
             yield return slotUI.transform.DOLocalMove(pos, 0.5f).SetDelay(0.5f).WaitForCompletion();
             slot.SetUseable(true);
             if (slot.HasEmptySlot())
@@ -147,6 +178,75 @@ namespace FloatSakujyo.UI
                 Sloter.TryCompleteSlot();
             }
             Sloter.RemoveCompletingSlotGroup();
+        }
+
+        public IEnumerator PlayItemNeedViewEnter(BoxColorGroupSlotUI boxColorGroupSlotUI)
+        {
+            var itemNeedView = boxColorGroupSlotUI.ItemNeedView;
+            itemNeedView.gameObject.CheckActiveSelf(true);
+
+            itemNeedView.Avatar.sprite = CatSpriteManager.Instance.GetRandomCatSprite();
+            var slotUIIndex = Array.IndexOf(slotUIs, boxColorGroupSlotUI);
+            var canvas = GameController.Instance.ColorGroupSlotViewCanvas;
+
+            itemNeedView.transform.SetParent(canvas.transform);
+            itemNeedView.transform.SetSiblingIndex(2);
+
+            itemNeedView.transform.localScale = Vector3.one;
+            itemNeedView.transform.localRotation = Quaternion.identity;
+
+            bool isMoveRight = this.isMoveRight[slotUIIndex];
+            var pos = isMoveRight ? slotUILocalPoses[1] + Vector3.left * 5 : slotUILocalPoses[slotUILocalPoses.Length - 1] + Vector3.right * 5;
+            pos = transform.TransformPoint(pos);
+            pos = canvas.transform.InverseTransformPoint(pos);
+            pos.y += itemNeedView.Avatar.rectTransform.rect.size.y * 0.8f;
+            pos.z += 500;
+
+            var itemNeedViewRectTrans = itemNeedView.transform as RectTransform;
+            itemNeedViewRectTrans.anchoredPosition3D = pos;
+
+            pos = slotUILocalPoses[slotUIIndex];
+            pos = transform.TransformPoint(pos);
+            pos = canvas.transform.InverseTransformPoint(pos);
+            pos.y += itemNeedView.Avatar.rectTransform.rect.size.y * 0.8f;
+            pos.z += 500;
+
+            yield return itemNeedViewRectTrans.DOAnchorPos3D(pos, 1f).SetEase(Ease.OutBack).WaitForCompletion();
+
+            itemNeedViewRectTrans.anchoredPosition3D = pos;
+
+            var itemColor = boxColorGroupSlotUI.Slot.ItemColor;
+            var itemManager = ItemColorConfigDataManager.Instance;
+            var item = GameObject.Instantiate(itemManager.GetConfigData(itemColor).Item, itemNeedView.ItemPlace);
+            //删除Item组件避免被点击
+            GameObject.Destroy(item);
+
+            itemNeedView.View.CheckActiveSelf(true);
+
+            yield break;
+        }
+
+        public IEnumerator PlayItemNeedViewExit(BoxColorGroupSlotUI boxColorGroupSlotUI, int slotIndex)
+        {
+            var itemNeedView = boxColorGroupSlotUI.ItemNeedView;
+
+            itemNeedView.View.CheckActiveSelf(false);
+
+            var slotUIIndex = slotIndex;
+            var canvas = GameController.Instance.ColorGroupSlotViewCanvas;
+
+            bool isMoveRight = this.isMoveRight[slotUIIndex];
+            var pos = isMoveRight ? slotUILocalPoses[1] + Vector3.left * 5 : slotUILocalPoses[slotUILocalPoses.Length - 1] + Vector3.right * 5;
+            pos = transform.TransformPoint(pos);
+            pos = canvas.transform.InverseTransformPoint(pos);
+            pos.y += itemNeedView.Avatar.rectTransform.rect.size.y * 0.8f;
+            pos.z += 500;
+
+            var itemNeedViewRectTrans = itemNeedView.transform as RectTransform;
+
+            itemNeedViewRectTrans.SetSiblingIndex(2);
+
+            yield return itemNeedViewRectTrans.DOAnchorPos3D(pos, 1f).WaitForCompletion();
         }
     }
 }

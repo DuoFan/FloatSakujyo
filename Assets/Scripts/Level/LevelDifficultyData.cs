@@ -8,27 +8,41 @@ namespace FloatSakujyo.Level
     public class LevelDifficultyData
     {
         [SerializeField]
-        int leftGroupCount;
-        public int LeftGroupCount => leftGroupCount;
+        int leftItemCount;
+        public int LeftItemCount => leftItemCount;
 
         [SerializeField]
-        int maxRandomEasyValue;
-        public int MaxRandomEasyValue => maxRandomEasyValue;
+        int maxGroupRandomValue;
+        public int MaxGroupRandomValue => maxGroupRandomValue;
 
         [SerializeField]
-        int n_HardThenEasy;
-        public int N_HardThenEasy => n_HardThenEasy;
+        int n_MinThenMaxGroup;
+        public int N_MinThenMaxGroup => n_MinThenMaxGroup;
 
         [SerializeField]
-        int maxEasyGroupCount;
-        public int MaxEasyGroupCount => maxEasyGroupCount;
+        int maxSeriesMaxGroupCount;
+        public int MaxSeriesMaxGroupCount => maxSeriesMaxGroupCount;
 
-        public LevelDifficultyData(int leftGroupCount, int maxRandomValue,int n_HardThenEasy, int maxEasyGroupCount)
+        [SerializeField]
+        int maxItemRandomValue;
+        public int MaxItemRandomValue => maxItemRandomValue;
+        [SerializeField]
+        int n_RandomThenMaxItem;
+        public int N_RandomThenMaxItem => n_RandomThenMaxItem;
+        [SerializeField]
+        int maxSeriesMaxItemCount;
+        public int MaxSeriesMaxItemCount => maxSeriesMaxItemCount;
+
+        public LevelDifficultyData(int leftItemCount, int maxGroupRandomValue, int n_MinThenMaxGroup, int maxSeriesMaxGroupCount,
+            int maxItemRandomValue, int n_RandomThenMaxItem, int maxSeriesMaxItemCount)
         {
-            this.leftGroupCount = leftGroupCount;
-            this.maxRandomEasyValue = maxRandomValue;
-            this.n_HardThenEasy = n_HardThenEasy;
-            this.maxEasyGroupCount = maxEasyGroupCount;
+            this.leftItemCount = leftItemCount;
+            this.maxGroupRandomValue = maxGroupRandomValue;
+            this.n_MinThenMaxGroup = n_MinThenMaxGroup;
+            this.maxSeriesMaxGroupCount = maxSeriesMaxGroupCount;
+            this.maxItemRandomValue = maxItemRandomValue;
+            this.n_RandomThenMaxItem = n_RandomThenMaxItem;
+            this.maxSeriesMaxItemCount = maxSeriesMaxItemCount;
         }
     }
 }

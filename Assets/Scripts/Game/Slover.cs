@@ -45,6 +45,17 @@ namespace FloatSakujyo.Game
             meshes.RemoveAt(index);
         }
 
+        public void ClearRigidbodys()
+        {
+            for (int i = 0; i < rigidbodies.Count; i++)
+            {
+                GameObject.Destroy(rigidbodies[i].gameObject);
+            }
+
+            rigidbodies.Clear();
+            meshes.Clear();
+        }
+
         private void FixedUpdate()
         {
             if(rigidbodies == null)

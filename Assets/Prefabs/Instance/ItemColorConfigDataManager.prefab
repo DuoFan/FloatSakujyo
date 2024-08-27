@@ -65,3 +65,15 @@ MonoBehaviour:
     item: {fileID: 5931586383691768882, guid: 649a75861261343488062872c19daa9e, type: 3}
     boxTexture: {fileID: 0}
     coverTexture: {fileID: 0}
+  - itemColor: 6
+    item: {fileID: 5931586383691768882, guid: c9de9b2b4f38f90439060b6b98d4a6a4, type: 3}
+    boxTexture: {fileID: 0}
+    coverTexture: {fileID: 0}
+  - itemColor: 7
+    item: {fileID: 5348421493163242048, guid: a7fc671effd7e354984818e203c419eb, type: 3}
+    boxTexture: {fileID: 0}
+    coverTexture: {fileID: 0}
+  - itemColor: 8
+    item: {fileID: 5348421493163242048, guid: 158b29e34403f2041bc2b9a674684749, type: 3}
+    boxTexture: {fileID: 0}
+    coverTexture: {fileID: 0}

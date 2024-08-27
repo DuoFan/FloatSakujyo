@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.CompilerServices;
 using UnityEngine.EventSystems;
+using System.Linq;
+using WeChatWASM;
 
 namespace FloatSakujyo.Level
 {
@@ -27,7 +29,8 @@ namespace FloatSakujyo.Level
             return handle;
         }
 
-        public static ColorGroupSloter GenerateColorQueueSloter(LevelData levelData, int defaultNoneGroupSlotCount, bool isGroupDefalutUseable,out List<ItemColor> colorGroupQueues)
+
+        public static ColorGroupSloter GenerateColorQueueSloter(LevelData levelData, int defaultNoneGroupSlotCount, bool isGroupDefalutUseable, out List<ItemColor> colorGroupQueues)
         {
             if (levelData.IsCustomColorGroup && levelData.ItemColorGroupDatas.Length > 0)
             {
@@ -35,36 +38,122 @@ namespace FloatSakujyo.Level
             }
             else
             {
-                int colorGroupCount = 0;
-                int[] leftColorGroupCounts = new int[levelData.ItemColorGroupDatas.Length];
-                for (int i = 0; i < levelData.ItemColorGroupDatas.Length; i++)
-                {
-                    colorGroupCount += levelData.ItemColorGroupDatas[i].GroupCount;
-                    leftColorGroupCounts[i] = levelData.ItemColorGroupDatas[i].GroupCount;
-                }
+                colorGroupQueues = new List<ItemColor>();
 
-                colorGroupQueues = new List<ItemColor>(colorGroupCount);
-                var random = new System.Random();
-                while (colorGroupCount > 0)
+                int[] leftColorGroupCounts = GetColorGroupCounts(levelData);
+                var itemCount = leftColorGroupCounts.Sum(x => x * 3);
+
+                var levelDifficultyDatas = levelData.LevelDifficultyDatas;
+
+                int n_MinGroup = 0;
+                int maxSeriesMaxGroupCount = 0;
+
+                while (itemCount > 0)
                 {
-                    var index = random.Next(0, colorGroupCount); ;
-                    int j = -1;
-                    while (index >= 0)
+                    LevelDifficultyData curDifficultyData = null;
+
+                    for (int i = 0; i < levelDifficultyDatas.Length; i++)
                     {
-                        j++;
-                        index -= leftColorGroupCounts[j];
-                        if (index < 0)
+                        if (itemCount <= levelDifficultyDatas[i].LeftItemCount)
                         {
+                            curDifficultyData = levelData.LevelDifficultyDatas[i];
                             break;
                         }
                     }
 
-                    colorGroupQueues.Add(levelData.ItemColorGroupDatas[j].ItemColor);
-                    leftColorGroupCounts[j]--;
-                    colorGroupCount--;
+                    if (curDifficultyData != null)
+                    {
+                        bool findMax;
+                        var randomValue = UnityEngine.Random.Range(0, 100);
+                        if ((randomValue < curDifficultyData.MaxGroupRandomValue || n_MinGroup >= curDifficultyData.N_MinThenMaxGroup) &&
+                            maxSeriesMaxGroupCount < curDifficultyData.MaxSeriesMaxGroupCount)
+                        {
+                            n_MinGroup = 0;
+                            maxSeriesMaxGroupCount++;
+                            findMax = true;
+                        }
+                        else
+                        {
+                            n_MinGroup++;
+                            maxSeriesMaxGroupCount = 0;
+                            findMax = false;
+                        }
+
+                        int index = findMax ? FindMaxIndexInArray(leftColorGroupCounts) : FindMinIndexInArray(leftColorGroupCounts);
+                        colorGroupQueues.Add(levelData.ItemColorGroupDatas[index].ItemColor);
+                        leftColorGroupCounts[index]--;
+                    }
+                    else
+                    {
+                        var index = GetRandomIndexInArray(leftColorGroupCounts);
+
+                        colorGroupQueues.Add(levelData.ItemColorGroupDatas[index].ItemColor);
+                        leftColorGroupCounts[index]--;
+                    }
+
+                    itemCount -= 3;
                 }
             }
             return new ColorGroupSloter(new List<ItemColor>(colorGroupQueues), defaultNoneGroupSlotCount, isGroupDefalutUseable);
+        }
+
+        public static int[] GetColorGroupCounts(LevelData levelData)
+        {
+            int[] colorGroupCounts = new int[levelData.ItemColorGroupDatas.Length];
+            for (int i = 0; i < levelData.ItemColorGroupDatas.Length; i++)
+            {
+                colorGroupCounts[i] = levelData.ItemColorGroupDatas[i].GroupCount;
+            }
+            return colorGroupCounts;
+        }
+
+        public static int FindMaxIndexInArray(int[] array)
+        {
+            int value = 0;
+            int index = -1;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] > value)
+                {
+                    value = array[i];
+                    index = i;
+                }
+            }
+
+            return index;
+        }
+
+        public static int FindMinIndexInArray(int[] array)
+        {
+            int value = int.MaxValue;
+            int index = -1;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] > 0 && array[i] < value)
+                {
+                    value = array[i];
+                    index = i;
+                }
+            }
+
+            return index;
+        }
+
+        public static int GetRandomIndexInArray(int[] array)
+        {
+            var total = array.Sum(x => x);
+            var value = UnityEngine.Random.Range(0, total);
+            int index = -1;
+            while (value >= 0)
+            {
+                index++;
+                value -= array[index];
+                if (value < 0)
+                {
+                    break;
+                }
+            }
+            return index;
         }
 
         public static int RoundToInt(float value)

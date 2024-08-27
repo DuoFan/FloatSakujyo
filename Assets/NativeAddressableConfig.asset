@@ -18,7 +18,69 @@ MonoBehaviour:
     assets:
     - address: LevelData
       group: LevelData
-      asset: {fileID: 11400000, guid: 6eaef5defed121842b3bde92419498d6, type: 2}
+      asset: {fileID: 11400000, guid: 48a733778be068440856ac62a3d37b56, type: 2}
     - address: LevelData
       group: LevelData
       asset: {fileID: 11400000, guid: c5afcde2334c1f94093664fd063950f9, type: 2}
+  - address: Cat
+    assets:
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: c10215a6682dfb142b8c90671926c04e, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: d148f5d781594934f91714dd1dec963c, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: 328556dd2b67a8145a48a2ec3f494645, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: 328a0c7c284d10e40ba44b868f3f014e, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: 64efc254c71848449b002626c0b7fd79, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: e438496f0f109c947ac19cfd9c3710d6, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: 05f97f07cde394a4bb70196b304b2f3a, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: 85d6a9aac03a7c846a1ffae40590b805, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: 279b9e691f8543747a6d123fe955a288, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: 78bd07809973f6049ad01d97104250e0, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: c80985a1644c0f54c896d290c366ec6b, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: c88c93982fa5b4445896f54bb2b2f1a0, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: 09f79fded7ea9934594bca060cfdafa1, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: 69dafd4dd848aec4aad6d61d7c733216, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: 2bba8f2e00864f445bbb0eb4514184c8, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: acc1fe63059ebbe4089c751966fe25ed, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: ac48f3cfbb6637d4a8e80a6e3a0172f2, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: dc3cb399fcea1be42b55d17c59069290, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: cebc8be7aae066d4ba8f097a3c403f57, type: 3}
+    - address: Cat
+      group: Default Local Group
+      asset: {fileID: 2800000, guid: 0f82078974797e94cb620535821801a7, type: 3}

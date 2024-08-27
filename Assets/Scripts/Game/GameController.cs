@@ -1,4 +1,6 @@
+using DG.Tweening;
 using FloatSakujyo.Level;
+using FloatSakujyo.SaveData;
 using FloatSakujyo.UI;
 using GameExtension;
 using System;
@@ -19,6 +21,8 @@ namespace FloatSakujyo.Game
 
         [SerializeField]
         Canvas colorGroupSlotViewCanvas;
+        public Canvas ColorGroupSlotViewCanvas => colorGroupSlotViewCanvas;
+
         [SerializeField]
         protected ColorGroupSlotView colorGroupSlotView;
 
@@ -33,7 +37,10 @@ namespace FloatSakujyo.Game
         [SerializeField]
         Vector2 positionArea;
 
+        int itemGridCount;
         ItemGrid[] itemGrids;
+
+        Queue<Item> edenItemQueue;
 
         public List<Item> OldItems
         {
@@ -69,6 +76,9 @@ namespace FloatSakujyo.Game
         [SerializeField]
         Vector2 refNoneColorGroupSlotViewWidth;
 
+        [SerializeField]
+        Transform backupContent;
+
         protected override void Internal_FreezeGameplay()
         {
 
@@ -95,7 +105,8 @@ namespace FloatSakujyo.Game
 
             waterLevel.Init(waveInterval);
 
-            var levelData = LevelDataManager.Instance.GetData(0);
+            var levelID = GameDataManager.Instance.GetLevelID();
+            var levelData = LevelDataManager.Instance.GetData(levelID);
             StartCoroutine(StartLevel(levelData));
         }
 
@@ -159,11 +170,18 @@ namespace FloatSakujyo.Game
 
             levelPanel.ResetHelperItems();*/
 
-            var edenItems = LevelEntity.SpawnItems(levelData.FloatItemCount, ItemGeneration.Eden);
-            var oldItems = LevelEntity.SpawnItems(levelData.FloatItemCount, ItemGeneration.Old);
+            itemGridCount = Mathf.Min(levelData.FloatItemCount, LevelEntity.TotalItemCount);
+            var oldItems = LevelEntity.SpawnItems(itemGridCount, ItemGeneration.Old);
+
+            var edenItemCount = Mathf.Min(levelData.FloatItemCount, LevelEntity.TotalItemCount - itemGridCount);
+
+            var edenItems = LevelEntity.SpawnItems(edenItemCount, ItemGeneration.Eden);
+
             var itemBounds = oldItems[0].GetComponent<Collider>().bounds;
 
-            itemGrids = CalculateGrids(levelData.FloatItemCount, itemBounds, positionArea);
+            itemGrids = CalculateGrids(itemGridCount, itemBounds, positionArea);
+
+            edenItemQueue = new Queue<Item>();
 
             for (int i = 0; i < oldItems.Length; i++)
             {
@@ -172,13 +190,16 @@ namespace FloatSakujyo.Game
 
             for (int i = 0; i < edenItems.Length; i++)
             {
-                InitItem(edenItems[i], itemGrids[i]);
+                InitItem(edenItems[i], GetRandomEmptyItemGrid());
             }
 
             while (IsFreezing)
             {
                 TryResumeGameplay();
             }
+
+            isFaild = false;
+            isCompleted = false;
 
             LoadingPanel.Instance?.Hide();
         }
@@ -255,14 +276,19 @@ namespace FloatSakujyo.Game
 
         private void InitItem(Item item,ItemGrid grid)
         {
-            PutItemToGrid(item, grid);
-            if(item.ItemGeneration == ItemGeneration.Old)
+            float height = 1;
+            item.transform.position = new Vector3(grid.Position.x, height, grid.Position.y);
+            item.transform.eulerAngles = Vector3.up * UnityEngine.Random.Range(0, 360f) + Vector3.forward * 90;
+
+            if (item.ItemGeneration == ItemGeneration.Old)
             {
                 AddItemToSlover(item);
             }
             else
             {
+                grid.PutItem(item);
                 item.DisablePhysics();
+                edenItemQueue.Enqueue(item);
             }
         }
         private void OnEdenToOld(Item item)
@@ -307,24 +333,6 @@ namespace FloatSakujyo.Game
             yield break;
         }
 
-        void PutItemToGrid(Item item,ItemGrid grid)
-        {
-            float height = 1;
-            switch (item.ItemGeneration)
-            {
-                case ItemGeneration.Eden:
-                    height = 0.6f;
-                    break;
-                case ItemGeneration.Old:
-                    height = 0.6f;
-                    break;
-            }
-
-            grid.PutItem(item);
-            item.transform.position = new Vector3(grid.Position.x, height, grid.Position.y);
-            item.transform.eulerAngles = Vector3.up * UnityEngine.Random.Range(0, 360f) + Vector3.forward * 90;
-        }
-
         void AddItemToSlover(Item item)
         {
             item.Rigidbody.mass = itemMass;
@@ -356,16 +364,16 @@ namespace FloatSakujyo.Game
             return true;
         }
 
-        ItemGrid GetRandomPuttedItemGrid()
+        ItemGrid GetRandomEmptyItemGrid()
         {
-            int puttedGridCount = itemGrids.Count(x => x.Item != null);
-            if (puttedGridCount > 0)
+            int emptyGridCount = itemGrids.Count(x => x.Item == null);
+            if (emptyGridCount > 0)
             {
-                var index = UnityEngine.Random.Range(0, puttedGridCount);
+                var index = UnityEngine.Random.Range(0, emptyGridCount);
                 for (int i = 0; i < itemGrids.Length; i++)
                 {
                     var grid = itemGrids[i];
-                    if(grid.Item != null)
+                    if(grid.Item == null)
                     {
                         if (index == 0)
                         {
@@ -384,10 +392,18 @@ namespace FloatSakujyo.Game
 
             OnOldToDie(item);
 
-            var randomItemGrid = GetRandomPuttedItemGrid();
-            if (randomItemGrid != null)
+            ItemGrid edenItemGrid = null;
+            if(edenItemQueue.Count > 0)
             {
-                OnEdenToOld(randomItemGrid.Item);
+                var edenItem = edenItemQueue.Dequeue();
+                edenItemGrid = FindItemGird(edenItem);
+                OnEdenToOld(edenItem);
+            }
+
+            if (LevelEntity.itemCount > itemGridCount * 2 && edenItemGrid != null)
+            {
+                var newEdenItem = LevelEntity.SpawnItems(1, ItemGeneration.Eden)[0];
+                InitItem(newEdenItem, edenItemGrid);
             }
 
             int index = slot.AllocateIndexForItem(item);
@@ -400,13 +416,7 @@ namespace FloatSakujyo.Game
             yield return fillAnimation;
             slot.CompleteFillItem();
 
-
             LevelEntity.itemCount--;
-            if (LevelEntity.itemCount >= LevelEntity.LevelData.FloatItemCount * 2 && randomItemGrid != null)
-            {
-                var newEdenItem = LevelEntity.SpawnItems(1, ItemGeneration.Eden)[0];
-                InitItem(newEdenItem, randomItemGrid);
-            }
 
             if (isSlotFilled)
             {
@@ -433,6 +443,8 @@ namespace FloatSakujyo.Game
 
             if (LevelEntity.itemCount == 0 && !isFaild && !isCompleted)
             {
+                yield return new WaitUntil(() => colorGroupSloter.GeneratingSlotGroupCount <= 0);
+
                 isCompleted = true;
                 OnGameCompleted();
             }
@@ -461,14 +473,111 @@ namespace FloatSakujyo.Game
             }
         }
 
+        void Restore()
+        {
+            isFaild = false;
+            //有可能在失败后填满了某一个盒子
+            LevelEntity.ColorGroupSloter.TryCompleteSlot();
+        }
+
+        public void ClearNoneSlotGroupForRestore()
+        {
+            var noneGroupSlot = LevelEntity.ColorGroupSloter.FindColorGroupSlot(ItemColor.None);
+            ClearGroupSlot(noneGroupSlot);
+
+            Restore();
+
+            TryResumeGameplay();
+        }
+
+        public void ClearGroupSlot(ColorGroupSlot groupSlot)
+        {
+            var items = groupSlot.Items.Clone() as Item[];
+            for (int i = 0; i < groupSlot.Items.Length; i++)
+            {
+                if (groupSlot.Items[i] != null)
+                {
+                    groupSlot.RemoveItem(i);
+                }
+            }
+            BackupItems(items);
+        }
+
+        //后备物品，用于后续盒子使用
+        void BackupItems(IEnumerable<Item> items)
+        {
+            var time = 0.5f;
+            foreach (Item item in items)
+            {
+                if (item != null)
+                {
+                    item.transform.SetParent(backupContent);
+                    item.transform.DOScale(Vector3.zero, time);
+                    LevelEntity.ColorGroupSloter.AddBackupItem(item);
+                }
+            }
+        }
+
+
+        public virtual void Restart()
+        {
+            var levelData = LevelEntity.LevelData;
+            DisposeLevel();
+            StartCoroutine(StartLevel(levelData));
+        }
+
+        public void NextLevel()
+        {
+            DisposeLevel();
+            var levelData = LevelDataManager.Instance.GetData(GameDataManager.Instance.GetLevelID());
+            StartCoroutine(StartLevel(levelData));
+        }
+
+        void DisposeLevel()
+        {
+            LevelEntity.Dispose();
+            slover.ClearRigidbodys();
+        }
+
+        public float GetLevelProgress()
+        {
+            return LevelEntity.GetProgress();
+        }
+
+        public float GetReadablelProgress()
+        {
+            return GetLevelProgress() * 100;
+        }
+
         protected virtual void OnGameCompleted()
         {
+            var level = LevelDataManager.Instance.GetNextLevel(LevelEntity.LevelData);
+            if (level == null)
+            {
+                level = LevelDataManager.Instance.GetFirstLevel();
+            }
+            GameDataManager.Instance.SetLevelID(level.ID);
 
+            FreezeGameplay();
+
+            /*if (cityConfigData != null)
+            {
+                GameDataManager.Instance.UnlockBuilding(cityConfigData.ID, buildingIndex);
+                GameDataManager.Instance.SetDisplayCityID(cityConfigData.ID);
+                GameUIManager.Instance.BuildProgressPanel.CompleteBuild();
+            }
+            else
+            {
+                GameUIManager.Instance.OpenCompletePanel();
+            }*/
+
+            GameUIManager.Instance.OpenCompletePanel();
         }
 
         protected virtual void OnGameFailed()
         {
-
+            FreezeGameplay();
+            GameUIManager.Instance.OpenRestorePanel();
         }
     }
 }
