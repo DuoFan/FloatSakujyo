@@ -28,7 +28,7 @@ namespace FloatSakujyo.UI
         public void Open(HelperItemBtn _helperItemBtn)
         {
             helperItemBtn = _helperItemBtn;
-            textImg.sprite = helperItemBtn.TextSprite;
+            //textImg.sprite = helperItemBtn.TextSprite;
             itemIconImg.sprite = helperItemBtn.ItemIconSprite;
             GameUIManager.Instance.OpenPanel(this);
         }

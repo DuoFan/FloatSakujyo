@@ -22,6 +22,9 @@ MonoBehaviour:
     - address: LevelData
       group: LevelData
       asset: {fileID: 11400000, guid: c5afcde2334c1f94093664fd063950f9, type: 2}
+    - address: LevelData
+      group: LevelData
+      asset: {fileID: 11400000, guid: 2f0f493f03fe49f40897e0f72cce9af0, type: 2}
   - address: Cat
     assets:
     - address: Cat

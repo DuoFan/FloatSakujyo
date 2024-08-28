@@ -24,8 +24,6 @@ namespace FloatSakujyo.Game
         List<Rigidbody> rigidbodies = new List<Rigidbody>();
         List<Mesh> meshes = new List<Mesh>();
 
-        Vector3[] vertices = new Vector3[8];
-
         public void SetBuoyancyForce(float force)
         {
             buoyancyForce = force;
@@ -35,7 +33,6 @@ namespace FloatSakujyo.Game
         {
             rigidbodies.Add(rigidbody);
             meshes.Add(rigidbody.GetComponent<MeshFilter>().sharedMesh);
-            rigidbody.transform.SetParent(transform);
         }
 
         public void RemoveRigidbody(Rigidbody rigidbody)
@@ -47,11 +44,6 @@ namespace FloatSakujyo.Game
 
         public void ClearRigidbodys()
         {
-            for (int i = 0; i < rigidbodies.Count; i++)
-            {
-                GameObject.Destroy(rigidbodies[i].gameObject);
-            }
-
             rigidbodies.Clear();
             meshes.Clear();
         }
@@ -65,24 +57,41 @@ namespace FloatSakujyo.Game
 
             var waterLevel = CalculateWaterLevel();
             waterLevelTransform.transform.position = new Vector3(waterLevelTransform.position.x, waterLevel, waterLevelTransform.position.z);
+
+            float minY;
+            float maxY;
+
+            void CheckMin_Max_Y(Rigidbody rigidbody,Vector3 vertice)
+            {
+                var worldVertice = rigidbody.transform.TransformPoint(vertice);
+                if (worldVertice.y < minY)
+                {
+                    minY = worldVertice.y;
+                }
+                if (worldVertice.y > maxY)
+                {
+                    maxY = worldVertice.y;
+                }
+            }
+
             for (int i = 0; i < rigidbodies.Count; i++)
             {
                 var rigidbody = rigidbodies[i];
 
+                minY = float.MaxValue;
+                maxY = float.MinValue;
+
                 var mesh = meshes[i];
                 var bounds = mesh.bounds;
-                
-                vertices[0] = rigidbody.transform.TransformPoint(bounds.min);
-                vertices[1] = rigidbody.transform.TransformPoint(new Vector3(bounds.min.x, bounds.min.y, bounds.max.z));
-                vertices[2] = rigidbody.transform.TransformPoint(new Vector3(bounds.min.x, bounds.max.y, bounds.min.z));
-                vertices[3] = rigidbody.transform.TransformPoint(new Vector3(bounds.min.x, bounds.max.y, bounds.max.z));
-                vertices[4] = rigidbody.transform.TransformPoint(new Vector3(bounds.max.x, bounds.min.y, bounds.min.z));
-                vertices[5] = rigidbody.transform.TransformPoint(new Vector3(bounds.max.x, bounds.min.y, bounds.max.z));
-                vertices[6] = rigidbody.transform.TransformPoint(new Vector3(bounds.max.x, bounds.max.y, bounds.min.z));
-                vertices[7] = rigidbody.transform.TransformPoint(bounds.max);
 
-                float minY = vertices.Min(v => v.y);
-                float maxY = vertices.Max(v => v.y);
+                CheckMin_Max_Y(rigidbody, bounds.min);
+                CheckMin_Max_Y(rigidbody, new Vector3(bounds.min.x, bounds.min.y, bounds.max.z));
+                CheckMin_Max_Y(rigidbody, new Vector3(bounds.min.x, bounds.max.y, bounds.min.z));
+                CheckMin_Max_Y(rigidbody, new Vector3(bounds.min.x, bounds.max.y, bounds.max.z));
+                CheckMin_Max_Y(rigidbody, new Vector3(bounds.max.x, bounds.min.y, bounds.min.z));
+                CheckMin_Max_Y(rigidbody, new Vector3(bounds.max.x, bounds.min.y, bounds.max.z));
+                CheckMin_Max_Y(rigidbody, new Vector3(bounds.max.x, bounds.max.y, bounds.min.z));
+                CheckMin_Max_Y(rigidbody, bounds.max);
 
                 if (minY < waterLevel)
                 {

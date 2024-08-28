@@ -8,7 +8,7 @@ namespace FloatSakujyo.Game
 {
     public class ColorGroupSloter : IDisposable
     {
-        const int NONE_COLOR_GROUP_SLOT_INDEX = 0;
+        public const int NONE_COLOR_GROUP_SLOT_INDEX = 0;
         public List<ItemColor> ColorGroupQueues { get; private set; }
 
         public ColorGroupSlot[] ColorGroupSlots { get; private set; }
@@ -330,30 +330,32 @@ namespace FloatSakujyo.Game
                 }
             }
 
-            /*if (itemColor == ItemColor.None)
+            if (itemColor == ItemColor.None)
             {
-                var levelEntity = GameController.Instance.LevelEntity;
-                int easyDifficult = 0;
-                IScrew item = null;
+                Item item = null;
+                Dictionary<ItemColor,int> itemColorMapToItemCount = new Dictionary<ItemColor, int>();
                 foreach (var _item in items)
                 {
-                    if (item == null)
+                    if(itemColorMapToItemCount.TryGetValue(_item.ItemColor,out var count))
                     {
-                        item = _item;
-                        easyDifficult = item.Hole.Difficulty;
+                        itemColorMapToItemCount[_item.ItemColor] = count + 1;
                     }
-                    else if (_item.Hole.Difficulty < easyDifficult)
+                    else
                     {
-                        item = _item;
-                        easyDifficult = item.Hole.Difficulty;
+                        itemColorMapToItemCount[_item.ItemColor] = 1;
                     }
                 }
 
-                if (item != null)
+                int maxCount = 0;
+                foreach (var _itemColor in itemColorMapToItemCount.Keys)
                 {
-                    itemColor = item.ScrewColor;
+                    if (itemColorMapToItemCount[_itemColor] > maxCount)
+                    {
+                        maxCount = itemColorMapToItemCount[_itemColor];
+                        itemColor = _itemColor;
+                    }
                 }
-            }*/
+            }
 
             return itemColor;
         }

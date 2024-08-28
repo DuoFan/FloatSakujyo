@@ -1,4 +1,6 @@
+using DG.Tweening;
 using FloatSakujyo.Game;
+using FloatSakujyo.Level;
 using GameExtension;
 using System;
 using System.Collections;
@@ -12,11 +14,11 @@ namespace FloatSakujyo.UI
     public class LevelPanel : UIPanel, IInitUI
     {
         [SerializeField]
-        Transform levelSprites;
-        List<Image> numImages;
-
+        TextMeshProUGUI levelText;
         [SerializeField]
-        TMP_Text leftScrewCountText;
+        Image levelProgress;
+        Tween levelProgressTween;
+
         [SerializeField]
         Button pauseBtn;
 
@@ -28,79 +30,45 @@ namespace FloatSakujyo.UI
         HelperItemBtn clearNoneSlotGroupBtn;
 
         [SerializeField]
-        GameObject breakPlaneHint;
-
-        [SerializeField]
         Transform topContent;
 
         public void InitUI()
         {
-            numImages = new List<Image>();
-           /* pauseBtn.onClick.AddListener(GameUIManager.Instance.OpenSettingPanel);
-            GameUIManager.Instance.AdjustPosYBySafeArea(topContent);*/
+             pauseBtn.onClick.AddListener(GameUIManager.Instance.OpenSettingPanel);
+             /*GameUIManager.Instance.AdjustPosYBySafeArea(topContent);*/
         }
 
         public void InitHelperBtns()
         {
-            packageBtn.Init(GameController.Instance.CompleteGroup, 2);
-            rearrangeBtn.Init(GameController.Instance.Rearrange, 2);
-            clearNoneSlotGroupBtn.Init(GameController.Instance.ClearNoneSlotGroupForRestore, 2);
+            packageBtn.Init(GameController.Instance.CompleteGroup);
+            rearrangeBtn.Init(GameController.Instance.Rearrange);
+            clearNoneSlotGroupBtn.Init(GameController.Instance.ClearNoneSlotGroup);
         }
 
         public void OnLevelStart()
         {
+            SetLevelID(GameController.Instance.LevelEntity.LevelData.ID);
 
+            InitHelperBtns();
+
+            UpdateLevelProgress();
+            GameController.Instance.OnItemTook += UpdateLevelProgress;
         }
 
         public void SetLevelID(int levelID)
         {
-            var levelIDSprites= CharacterSpriteManager.Instance.GetNumberSprites(levelID);
-            for (int i = 0; i < levelIDSprites.Count; i++)
+            levelText.text = levelID.ToString();
+        }
+
+        public void UpdateLevelProgress()
+        {
+            if(levelProgressTween != null)
             {
-                Image img = null;
-                if(i >= numImages.Count)
-                {
-                    var go = new GameObject();
-                    go.transform.SetParent(levelSprites);
-                    img = go.AddComponent<Image>();
-                    img.rectTransform.sizeDelta = new Vector2(30, 35);
-                    img.preserveAspect = true;
-                    go.transform.localScale = Vector3.one;
-                    numImages.Add(img);
-                }
-                else
-                {
-                    img = numImages[i];
-                }
-                img.sprite = levelIDSprites[i];
+                levelProgressTween.Pause();
+                levelProgressTween.Kill();
             }
 
-            for (int i = numImages.Count - 1; i >= levelIDSprites.Count; i--)
-            {
-                Destroy(numImages[i].gameObject);
-                numImages.RemoveAt(i);
-            }
-        }
-
-        public void SetLeftScrewCount(int leftScrewCount)
-        {
-            leftScrewCountText.text = $"剩余螺丝：{leftScrewCount}";
-        }
-
-        public void ResetHelperItems()
-        {
-            packageBtn.ResetCount();
-            rearrangeBtn.ResetCount();
-            clearNoneSlotGroupBtn.ResetCount();
-        }
-
-        public void ShowBreakPlaneHint()
-        {
-            breakPlaneHint.CheckActiveSelf(true);
-        }
-        public void HideBreakPlaneHint()
-        {
-            breakPlaneHint.CheckActiveSelf(false);
+            levelProgressTween = levelProgress.DOFillAmount(GameController.Instance.GetLevelProgress(), 0.5f);
         }
     }
 }

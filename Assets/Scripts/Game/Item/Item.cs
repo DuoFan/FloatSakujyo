@@ -1,7 +1,10 @@
+using FloatSakujyo.Audio;
+using FloatSakujyo.SaveData;
 using GameExtension;
 using System;
 using System.Collections;
 using UnityEngine;
+using WeChatWASM;
 
 namespace FloatSakujyo.Game
 {
@@ -54,6 +57,19 @@ namespace FloatSakujyo.Game
         public void HideTrail()
         {
             trail.gameObject.CheckActiveSelf(false);
+        }
+
+        public void Take()
+        {
+            if (Application.platform == RuntimePlatform.WebGLPlayer && GameDataManager.Instance.GetPlayerPreference().HasVibration)
+            {
+                WX.VibrateShort(new VibrateShortOption()
+                {
+                    type = "medium"
+                });
+            }
+
+            AudioManager.Instance.PlayPoP();
         }
     }
 }

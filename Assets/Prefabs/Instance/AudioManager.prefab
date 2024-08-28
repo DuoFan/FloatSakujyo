@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6050030989160568595
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6050030989160568593}
+  - component: {fileID: 6050030989160568594}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6050030989160568593
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6050030989160568595}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.95638984, y: 1.0377846, z: 1.6302952}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6050030989160568594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6050030989160568595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71008a50b43a8c54f83379d6bd1dbf9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initSoundCount: 4
+  Zqddn_Zhb_right: {fileID: 8300000, guid: 1c32d24308c277743bf2f2c93a288ab0, type: 3}
+  Win: {fileID: 8300000, guid: fa3bac4e0c501a04d8dd86f272ac36d2, type: 3}
+  Pz: {fileID: 8300000, guid: 405a78b515dca61448fd60c63827c922, type: 3}
+  Put: {fileID: 8300000, guid: 8e0a6243fbd2859499e134af448acc1b, type: 3}
+  PoP: {fileID: 8300000, guid: ebb6ba2cb84c2a8448bbfd03a83a259c, type: 3}
+  Fly: {fileID: 8300000, guid: 899189e485b05dd45a6169917806b121, type: 3}
+  Fail: {fileID: 8300000, guid: ae17a2a6aa1b5d141910cf477796431f, type: 3}
+  Done: {fileID: 8300000, guid: 1f8345839c0a5004ea92d341362ceed1, type: 3}
+  Cut: {fileID: 8300000, guid: 8e5075380d6f6e2458b415e8a81488a3, type: 3}
+  CliCk: {fileID: 8300000, guid: a5514d102a2b38048ad36c2d0af876b8, type: 3}
+  Citywin: {fileID: 8300000, guid: ff85e633844bcd24d8fd674de4c14d6f, type: 3}
+  Boom: {fileID: 8300000, guid: 9e21073d03dab3644b08113f35c47491, type: 3}
+  Bgm: {fileID: 8300000, guid: 99bf58d97683efa428f03dba2d9f0c8f, type: 3}

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using FloatSakujyo.Audio;
 using FloatSakujyo.Game;
 using GameExtension;
 using SDKExtension;
@@ -75,6 +76,8 @@ namespace FloatSakujyo.UI
 #else
             adGetBtn.gameObject.CheckActiveSelf(true);
 #endif
+
+            AudioManager.Instance.PlayWin();
         }
 
         void Close()

@@ -247,6 +247,8 @@ namespace GameExtension
             {
                 autoReleaseHandles.Remove(audioHandle);
             }
+
+            audioHandle.OnSetAutoRelease -= CheckAudioHandleAutoReleaseState;
         }
         IEnumerator AutoReleaseAudioHandles()
         {

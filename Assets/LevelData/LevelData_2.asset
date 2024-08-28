@@ -26,14 +26,10 @@ MonoBehaviour:
     groupCount: 5
   - itemColor: 6
     groupCount: 5
-  - itemColor: 7
-    groupCount: 5
-  - itemColor: 8
-    groupCount: 5
   isCustomColorGroup: 0
   customColorGroupQueue: 
   levelDifficultyDatas:
-  - leftItemCount: 120
+  - leftItemCount: 90
     maxGroupRandomValue: 100
     n_MinThenMaxGroup: 99
     maxSeriesMaxGroupCount: 99

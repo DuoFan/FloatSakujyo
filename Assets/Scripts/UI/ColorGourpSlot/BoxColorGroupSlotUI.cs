@@ -28,6 +28,9 @@ namespace FloatSakujyo.UI
         [SerializeField]
         Animator animator;
 
+        [SerializeField]
+        Animator seal;
+
         public ItemColor ItemColor => Slot.ItemColor;
 
         public bool IsEnable => Slot != null;
@@ -107,6 +110,10 @@ namespace FloatSakujyo.UI
             //yield return transform.DOMove(transform.position + Vector3.up * 30, 0.2f).WaitForCompletion();
 
             yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1);
+
+            seal.gameObject.CheckActiveSelf(true);
+
+            yield return new WaitUntil(() => seal.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1);
 
             gameObject.CheckActiveSelf(false);
 

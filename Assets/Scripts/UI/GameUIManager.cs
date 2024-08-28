@@ -18,24 +18,24 @@ namespace FloatSakujyo.UI
 
         [SerializeField]
         Canvas canvas;
-        /*
+        
         [SerializeField]
         LevelPanel levelPanel;
         [SerializeField]
-        BuildProgressPanel buildProgressPanel;
-        public BuildProgressPanel BuildProgressPanel => buildProgressPanel;*/
+        ItemUnlockProgressPanel itemUnlockProgressPanel;
+        public ItemUnlockProgressPanel ItemUnlockProgressPanel => itemUnlockProgressPanel;
 
-        [SerializeField]
-        RestorePanel restorePanel;
-        [SerializeField]
-        RestoreCheckPanel restoreCheckPanel;
         [SerializeField]
         FailPanel failPanel;
         [SerializeField]
-        CompletePanel completePanel;
-        /*[SerializeField]
-        SettingPanel settingPanel;
+        RestorePanel restorePanel;
         [SerializeField]
+        RestartCheckPanel restartCheckPanel;
+        [SerializeField]
+        CompletePanel completePanel;
+        [SerializeField]
+        SettingPanel settingPanel;
+        /*[SerializeField]
         HelperItemPanel helperItemPanel;
         [SerializeField]
         ToastPanel toastPanel;
@@ -55,12 +55,12 @@ namespace FloatSakujyo.UI
         public IEnumerator InitializeGame()
         {
             canvas.worldCamera = CameraController.Instance.Camera;
-           /* levelPanel?.InitUI();
-            helperItemPanel?.InitUI();*/
-            failPanel?.InitUI();
-            /*beginnerTutorialPanel?.InitUI();
+            levelPanel?.InitUI();
+            /* helperItemPanel?.InitUI();*/
+            restartCheckPanel?.InitUI();
+            /*beginnerTutorialPanel?.InitUI();*/
             settingPanel?.InitUI();
-            buildProgressPanel?.InitUI();*/
+            /*buildProgressPanel?.InitUI();*/
             yield break;
         }
 
@@ -69,7 +69,7 @@ namespace FloatSakujyo.UI
             var rectTransform = transform as RectTransform;
             var posY = rectTransform.anchoredPosition.y - UIUtils.SafeAreaTop;
             rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, posY);
-        }
+        }*/
 
         public LevelPanel GetLevelPanel()
         {
@@ -86,23 +86,24 @@ namespace FloatSakujyo.UI
         {
             ClosePanel(ref levelPanel, 0);
         }
-        public BuildProgressPanel OpenBuildProgressPanel(City.CityConfigData cityConfigData, int buildingIndex)
+        
+        public ItemUnlockProgressPanel OpenItemUnlockProgressPanel()
         {
-            GetUI(ref buildProgressPanel).Open(cityConfigData, buildingIndex);
-            return buildProgressPanel;
+            OpenPanel(ref itemUnlockProgressPanel);
+            return itemUnlockProgressPanel;
         }
-        public void CloseBuildProgressPanel()
+        public void CloseItemUnlockProgressPanel()
         {
-            ClosePanel(ref buildProgressPanel, 0);
-        }*/
+            ClosePanel(ref itemUnlockProgressPanel, 0);
+        }
 
         public void OpenRestorePanel()
         {
             OpenPanel(ref restorePanel);
         }
-        public void OpenRestoreCheckPanel()
+        public void OpenRestartCheckPanel()
         {
-            OpenPanel(ref restoreCheckPanel);
+            OpenPanel(ref restartCheckPanel);
         }
 
         public void OpenFailPanel()
@@ -115,12 +116,12 @@ namespace FloatSakujyo.UI
             OpenPanel(ref completePanel);
         }
 
-        /*public void OpenSettingPanel()
+        public void OpenSettingPanel()
         {
             OpenPanel(ref settingPanel);
         }
 
-        public void OpenHelperItemPanel(HelperItemBtn helperItemBtn)
+        /*public void OpenHelperItemPanel(HelperItemBtn helperItemBtn)
         {
             GetUI(ref helperItemPanel).Open(helperItemBtn);
         }

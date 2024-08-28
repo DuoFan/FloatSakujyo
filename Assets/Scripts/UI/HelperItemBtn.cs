@@ -1,3 +1,4 @@
+using FloatSakujyo.SaveData;
 using GameExtension;
 using SDKExtension;
 using System;
@@ -12,17 +13,10 @@ namespace FloatSakujyo.UI
     [RequireComponent(typeof(Button))]
     public class HelperItemBtn : MonoBehaviour
     {
-        int totalCount;
         [SerializeField]
-        Image usedCountImg;
+        Image useableCount;
         [SerializeField]
-        Image totalCountImg;
-        [SerializeField]
-        GameObject useableHint;
-
-        [SerializeField]
-        Sprite textSprite;
-        public Sprite TextSprite => textSprite;
+        Image adIcon;
 
         [SerializeField]
         Sprite itemIconSprite;
@@ -31,39 +25,48 @@ namespace FloatSakujyo.UI
         Button button;
 
         Action help;
-        int usedCount;
-        public void Init(Action _help, int _totalCount)
+
+        [SerializeField]
+        HelperType helperType;
+
+        public void Init(Action _help)
         {
             help = _help;
-            totalCount = _totalCount;
             button = GetComponent<Button>();
-            button.onClick.AddListener(TryOpenPanelForSelf);
-            //默认totalCount < 10
-            totalCountImg.sprite = CharacterSpriteManager.Instance.GetNumberSprites(totalCount)[0];
-            ResetCount();
+            button.onClick.RemoveAllListeners();    
+            button.onClick.AddListener(TryUseHelp);
+            CheckUseableCount();
         }
 
-        public void ResetCount()
+        public void CheckUseableCount()
         {
-            usedCount = 0;
-            usedCountImg.sprite = CharacterSpriteManager.Instance.GetNumberSprites(usedCount)[0];
-            useableHint.CheckActiveSelf(usedCount < totalCount);
+            var helperCount = GameDataManager.Instance.GetHelperCount(helperType);
+            useableCount.sprite = CharacterSpriteManager.Instance.GetNumberSprites(helperCount)[0];
+            useableCount.gameObject.CheckActiveSelf(helperCount > 0);
+            adIcon.gameObject.CheckActiveSelf(helperCount <= 0);
         }
 
-        void TryOpenPanelForSelf()
+        public void TryUseHelp()
         {
-            if (usedCount < totalCount)
+            var helperCount = GameDataManager.Instance.GetHelperCount(helperType);
+            if (helperCount > 0)
             {
-                //GameUIManager.Instance.OpenHelperItemPanel(this);
+                UseHelp();
+                GameDataManager.Instance.SubHelperCount(helperType);
+                CheckUseableCount();
+            }
+            else
+            {
+                SDKListener.Instance.ShowReward(() =>
+                {
+                    UseHelp();
+                });
             }
         }
 
         public void UseHelp()
         {
             help?.Invoke();
-            usedCount++;
-            usedCountImg.sprite = CharacterSpriteManager.Instance.GetNumberSprites(usedCount)[0];
-            useableHint.CheckActiveSelf(usedCount < totalCount);
         }
     }
 }

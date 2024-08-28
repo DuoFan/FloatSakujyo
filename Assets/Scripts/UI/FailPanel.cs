@@ -1,54 +1,68 @@
-using GameExtension;
+using DG.Tweening;
+using FloatSakujyo.Audio;
 using FloatSakujyo.Game;
+using GameExtension;
 using SDKExtension;
+using Spine.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using WeChatWASM;
-using Spine.Unity;
-using DG.Tweening;
 
 namespace FloatSakujyo.UI
 {
-    public class FailPanel : UIPanel, IInitUI
+    public class FailPanel : UIPanel
     {
         [SerializeField]
         SkeletonGraphic failTitle;
+
+        /*[SerializeField]
+        Image progressBar;
+        [SerializeField]
+        TMP_Text progressText;*/
+
+        [SerializeField]
+        Button backBtn;
         [SerializeField]
         Button restartBtn;
-        [SerializeField]
-        Button returnBtn;
 
-        public void InitUI()
+        private void Awake()
         {
-            restartBtn.onClick.AddListener(Restart);
-            returnBtn.onClick.AddListener(ReturnToRestorePanel);
+            backBtn.onClick.AddListener(Back);
+            restartBtn.onClick.AddListener(OpenRestartCheckPanel);
         }
 
         public override void OnShowStart()
         {
             base.OnShowStart();
+
             var color = failTitle.color;
             color.a = 0;
             failTitle.color = color;
             failTitle.DOFade(1, 0.25f);
+
+            AudioManager.Instance.PlayFail();
         }
 
-        private void Restart()
+        void Close()
         {
             GameUIManager.Instance.ClosePanel(this, 0);
-            GameController.Instance.Restart();
         }
 
-        private void ReturnToRestorePanel()
+        void Back()
         {
-            GameUIManager.Instance.ClosePanel(this, 0);
-            GameUIManager.Instance.OpenRestorePanel();
+            Close();
+            GameController.Instance.BackToMainPage();
         }
+        
+        void OpenRestartCheckPanel()
+        {
+            Close();
+            GameUIManager.Instance.OpenRestartCheckPanel();
+        }
+
     }
 }
-

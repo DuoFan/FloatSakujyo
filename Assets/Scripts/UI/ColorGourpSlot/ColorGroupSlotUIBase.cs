@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using FloatSakujyo.Audio;
 
 namespace FloatSakujyo.UI
 {
@@ -93,6 +94,8 @@ namespace FloatSakujyo.UI
 
             yield return new WaitForSecondsRealtime(time / 2f);
 
+            AudioManager.Instance.PlayPut();
+
             yield return sequence.WaitForCompletion();
 
             item.HideTrail();
@@ -105,6 +108,7 @@ namespace FloatSakujyo.UI
 
         public virtual IEnumerator OnCompleted()
         {
+            AudioManager.Instance.PlayDone();
             Slot.SetUseable(false);
             yield break;
         }

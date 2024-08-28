@@ -14,9 +14,8 @@ namespace FloatSakujyo.Level
 {
     public class LevelEntity : LevelEntityBase
     {
-        Queue<ItemColor> colorGroupQueues;
         int[] leftItemCounts;
-        int spawnIndex;
+        public int SpawnIndex { get; private set; }
 
         public ColorGroupSloter ColorGroupSloter { get; private set; }
 
@@ -33,9 +32,7 @@ namespace FloatSakujyo.Level
 
             ColorGroupSloter = LevelUtils.GenerateColorQueueSloter(levelData, 6, true, out var _colorGroupQueues);
 
-            colorGroupQueues = new Queue<ItemColor>(_colorGroupQueues);
-
-            TotalItemCount = colorGroupQueues.Count * 3;
+            TotalItemCount = _colorGroupQueues.Count * 3;
 
             itemCount = TotalItemCount;
 
@@ -45,7 +42,7 @@ namespace FloatSakujyo.Level
                 leftItemCounts[i] *= 3;
             }
 
-            spawnIndex = TotalItemCount;
+            SpawnIndex = TotalItemCount;
             n_RandomThenMaxItem = 0;
             maxSeriesMaxItemCount = 0;
 
@@ -55,13 +52,13 @@ namespace FloatSakujyo.Level
         public Item[] SpawnItems(int spawnCount, ItemGeneration generation)
         {
             var items = new Item[spawnCount];
-            for (int i = 0; i < spawnCount && spawnIndex > 0; i++)
+            for (int i = 0; i < spawnCount && SpawnIndex > 0; i++)
             {
                 LevelDifficultyData curDifficultyData = null;
-                ItemColor itemColor;
+                int index;
                 for (int j = 0; j < LevelData.LevelDifficultyDatas.Length; j++)
                 {
-                    if (spawnIndex <= LevelData.LevelDifficultyDatas[j].LeftItemCount)
+                    if (SpawnIndex <= LevelData.LevelDifficultyDatas[j].LeftItemCount)
                     {
                         curDifficultyData = LevelData.LevelDifficultyDatas[j];
                         break;
@@ -86,31 +83,34 @@ namespace FloatSakujyo.Level
                         findMax = false;
                     }
 
-                    int index = findMax ? LevelUtils.FindMaxIndexInArray(leftItemCounts) :
+                    index = findMax ? LevelUtils.FindMaxIndexInArray(leftItemCounts) :
                             LevelUtils.GetRandomIndexInArray(leftItemCounts);
-
-                    itemColor = LevelData.ItemColorGroupDatas[index].ItemColor;
-                    leftItemCounts[index]--;
                 }
                 else
                 {
-                    itemColor = colorGroupQueues.Peek();
+                    index = LevelUtils.FindMaxIndexInArray(leftItemCounts);
                 }
 
-                var itemConfigData = ItemColorConfigDataManager.Instance.GetConfigData(itemColor);
-                var item = Instantiate(itemConfigData.Item, transform);
-                item.SetGeneration(generation);
-                items[i] = item;
+                var itemColor = LevelData.ItemColorGroupDatas[index].ItemColor;
 
-                spawnIndex--;
-
-                if (spawnIndex % 3 == 0)
-                {
-                    colorGroupQueues.Dequeue();
-                }
+                items[i] = SpawnItemByItemColor(itemColor, generation);
             }
 
             return items;
+        }
+
+        public Item SpawnItemByItemColor(ItemColor itemColor,ItemGeneration generation)
+        {
+            var index = Array.IndexOf(LevelData.ItemColorGroupDatas, LevelData.ItemColorGroupDatas.FirstOrDefault(x => x.ItemColor == itemColor));
+            leftItemCounts[index]--;
+
+            var itemConfigData = ItemColorConfigDataManager.Instance.GetConfigData(itemColor);
+            var item = Instantiate(itemConfigData.Item, transform);
+            item.SetGeneration(generation);
+
+            SpawnIndex--;
+
+            return item;
         }
 
         public float GetProgress()

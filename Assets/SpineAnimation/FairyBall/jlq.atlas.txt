@@ -1,0 +1,62 @@
+
+jlq.png
+size: 712,712
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+qfg
+  rotate: false
+  xy: 2, 203
+  size: 506, 505
+  orig: 520, 520
+  offset: 7, 7
+  index: -1
+qg
+  rotate: false
+  xy: 2, 43
+  size: 270, 158
+  orig: 272, 169
+  offset: 1, 0
+  index: -1
+qs
+  rotate: true
+  xy: 510, 269
+  size: 228, 171
+  orig: 232, 171
+  offset: 2, 0
+  index: -1
+qs1
+  rotate: true
+  xy: 510, 499
+  size: 209, 198
+  orig: 209, 198
+  offset: 0, 0
+  index: -1
+qx1
+  rotate: false
+  xy: 274, 92
+  size: 220, 109
+  orig: 220, 110
+  offset: 0, 0
+  index: -1
+qx2
+  rotate: true
+  xy: 510, 47
+  size: 220, 140
+  orig: 220, 140
+  offset: 0, 0
+  index: -1
+qyz
+  rotate: false
+  xy: 274, 28
+  size: 220, 62
+  orig: 220, 65
+  offset: 0, 0
+  index: -1
+yz
+  rotate: true
+  xy: 652, 82
+  size: 185, 51
+  orig: 204, 57
+  offset: 10, 4
+  index: -1

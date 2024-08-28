@@ -12,6 +12,11 @@ namespace FloatSakujyo.Game
 
         public ItemGrid(Vector2 position)
         {
+            SetPosition(position);
+        }
+
+        public void SetPosition(Vector2 position)
+        {
             Position = position;
         }
 
