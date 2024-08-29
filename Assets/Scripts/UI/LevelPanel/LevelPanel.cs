@@ -20,6 +20,9 @@ namespace FloatSakujyo.UI
         Tween levelProgressTween;
 
         [SerializeField]
+        Image[] levelSteps;
+
+        [SerializeField]
         Button pauseBtn;
 
         [SerializeField]
@@ -38,29 +41,45 @@ namespace FloatSakujyo.UI
              /*GameUIManager.Instance.AdjustPosYBySafeArea(topContent);*/
         }
 
-        public void InitHelperBtns()
+        public void OnLevelStart()
+        {
+            SetLevelID(GameController.Instance.LevelData.ID);
+
+            InitHelperBtns();
+
+            InitLevelSteps();
+
+            UpdateLevelProgress();
+
+            GameController.Instance.OnItemTook += UpdateLevelProgress;
+        }
+        void InitHelperBtns()
         {
             packageBtn.Init(GameController.Instance.CompleteGroup);
             rearrangeBtn.Init(GameController.Instance.Rearrange);
             clearNoneSlotGroupBtn.Init(GameController.Instance.ClearNoneSlotGroup);
         }
 
-        public void OnLevelStart()
+        void InitLevelSteps()
         {
-            SetLevelID(GameController.Instance.LevelEntity.LevelData.ID);
-
-            InitHelperBtns();
-
-            UpdateLevelProgress();
-            GameController.Instance.OnItemTook += UpdateLevelProgress;
+            var progressWidth = levelProgress.rectTransform.rect.width;
+            var levelData = GameController.Instance.LevelData;
+            var totalItemCount = GameController.Instance.TotalItemCount;
+            int itemCount = 0;
+            for (int i = 0; i < levelSteps.Length; i++)
+            {
+                itemCount += levelData.SubLevelDatas[i].TotalItemCount;
+                levelSteps[i].rectTransform.anchoredPosition = Vector3.right * (progressWidth * itemCount / totalItemCount - levelSteps[i].rectTransform.rect.width * 0.5f 
+                    * levelSteps[i].rectTransform.localScale.x);
+            }
         }
 
-        public void SetLevelID(int levelID)
+        void SetLevelID(int levelID)
         {
             levelText.text = levelID.ToString();
         }
 
-        public void UpdateLevelProgress()
+        void UpdateLevelProgress()
         {
             if(levelProgressTween != null)
             {

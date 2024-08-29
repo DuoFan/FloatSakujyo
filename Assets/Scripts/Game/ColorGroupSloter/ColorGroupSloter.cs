@@ -8,11 +8,17 @@ namespace FloatSakujyo.Game
 {
     public class ColorGroupSloter : IDisposable
     {
+        public enum NextGroupSource
+        {
+            StartNextGroup, UnlockNewGroup
+        }
+
         public const int NONE_COLOR_GROUP_SLOT_INDEX = 0;
         public List<ItemColor> ColorGroupQueues { get; private set; }
 
         public ColorGroupSlot[] ColorGroupSlots { get; private set; }
         public int GeneratingSlotGroupCount { get; private set; }
+        public int CompletingSlotGroupCount { get; private set; }
 
         Dictionary<ItemColor, List<Item>> backupItems;
 
@@ -23,23 +29,23 @@ namespace FloatSakujyo.Game
 
         bool isGroupDefaultUseable;
 
-        public ColorGroupSloter(List<ItemColor> colorGroupQueues, int defaultNoneGroupSlotCount, bool isGroupDefaultUseable)
+        public ColorGroupSloter(int defaultColorGroupCount, int defaultNoneGroupSlotCount, bool isGroupDefaultUseable)
+        {
+            ColorGroupSlots = new ColorGroupSlot[defaultColorGroupCount + 1];
+            this.isGroupDefaultUseable = isGroupDefaultUseable;
+            ColorGroupSlots[NONE_COLOR_GROUP_SLOT_INDEX] = new ColorGroupSlot(ItemColor.None, defaultNoneGroupSlotCount, isGroupDefaultUseable);
+            backupItems = new Dictionary<ItemColor, List<Item>>();
+        }
+
+        public void SetColorGroupQueues(List<ItemColor> colorGroupQueues)
         {
             ColorGroupQueues = colorGroupQueues;
-            ColorGroupSlots = new ColorGroupSlot[3];
 
-            this.isGroupDefaultUseable = isGroupDefaultUseable;
-
-            backupItems = new Dictionary<ItemColor, List<Item>>();
-
-            //空颜色有5个槽位
-            ColorGroupSlots[NONE_COLOR_GROUP_SLOT_INDEX] = new ColorGroupSlot(ItemColor.None, defaultNoneGroupSlotCount, isGroupDefaultUseable);
-            //初始化两组颜色
-            for (int i = 0; i < 2; i++)
+            for (int i = NONE_COLOR_GROUP_SLOT_INDEX + 1; i < ColorGroupSlots.Length; i++)
             {
                 if (ColorGroupQueues.Count > 0)
                 {
-                    NextGroup();
+                    NextGroup(NextGroupSource.StartNextGroup);
                 }
             }
         }
@@ -54,17 +60,17 @@ namespace FloatSakujyo.Game
             itemList.Add(item);
         }
 
-        public void NextGroup(ItemColor itemColor = ItemColor.None)
+        public void NextGroup(NextGroupSource nextGroupSource, ItemColor itemColor = ItemColor.None)
         {
             groupSlotIndex++;
             if (groupSlotIndex >= ColorGroupSlots.Length)
             {
                 groupSlotIndex = NONE_COLOR_GROUP_SLOT_INDEX + 1;
             }
-            NextGroup(groupSlotIndex, itemColor);
+            NextGroup(groupSlotIndex, nextGroupSource, itemColor);
         }
 
-        public void NextGroup(int groupSlotIndex, ItemColor itemColor = ItemColor.None)
+        public void NextGroup(int groupSlotIndex, NextGroupSource nextGroupSource, ItemColor itemColor = ItemColor.None)
         {
             var index = 0;
             bool isOk = true;
@@ -127,6 +133,11 @@ namespace FloatSakujyo.Game
                     backupItems.Remove(slot.ItemColor);
                 }
             }
+
+            if (nextGroupSource == NextGroupSource.StartNextGroup)
+            {
+                OnSlotGenerated?.Invoke(slot);
+            }
         }
 
         public ColorGroupSlot FindUseableSlotForColor(ItemColor screwColor)
@@ -169,10 +180,6 @@ namespace FloatSakujyo.Game
 
         public void Dispose()
         {
-            for (int i = 0; i < ColorGroupSlots.Length; i++)
-            {
-                ColorGroupSlots[i]?.Dispose();
-            }
             ColorGroupSlots = null;
             ColorGroupQueues = null;
         }
@@ -182,10 +189,21 @@ namespace FloatSakujyo.Game
             GeneratingSlotGroupCount++;
         }
 
-        public void RemoveCompletingSlotGroup()
+        public void RemoveGeneratingSlotGroup()
         {
             GeneratingSlotGroupCount--;
         }
+
+        public void AddCompletingSlotGroup()
+        {
+            CompletingSlotGroupCount++;
+        }
+
+        public void RemoveCompletingSlotGroup()
+        {
+            CompletingSlotGroupCount--;
+        }
+
 
         public bool TryCompleteSlot()
         {
@@ -206,8 +224,7 @@ namespace FloatSakujyo.Game
                         OnSlotCompleted?.Invoke(ColorGroupSlots[i]);
                         if (ColorGroupQueues.Count > 0)
                         {
-                            NextGroup(i);
-                            OnSlotGenerated?.Invoke(ColorGroupSlots[i]);
+                            NextGroup(i, NextGroupSource.StartNextGroup);
                         }
                         else
                         {
@@ -298,7 +315,7 @@ namespace FloatSakujyo.Game
 
             ColorGroupSlots = newColorGroupSlots;
 
-            NextGroup(ColorGroupSlots.Length - 1, itemColor);
+            NextGroup(ColorGroupSlots.Length - 1, NextGroupSource.UnlockNewGroup, itemColor);
             return ColorGroupSlots[ColorGroupSlots.Length - 1];
         }
 
@@ -333,10 +350,10 @@ namespace FloatSakujyo.Game
             if (itemColor == ItemColor.None)
             {
                 Item item = null;
-                Dictionary<ItemColor,int> itemColorMapToItemCount = new Dictionary<ItemColor, int>();
+                Dictionary<ItemColor, int> itemColorMapToItemCount = new Dictionary<ItemColor, int>();
                 foreach (var _item in items)
                 {
-                    if(itemColorMapToItemCount.TryGetValue(_item.ItemColor,out var count))
+                    if (itemColorMapToItemCount.TryGetValue(_item.ItemColor, out var count))
                     {
                         itemColorMapToItemCount[_item.ItemColor] = count + 1;
                     }

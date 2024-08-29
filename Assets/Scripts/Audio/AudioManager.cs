@@ -36,6 +36,12 @@ namespace FloatSakujyo.Audio
         private UnityEngine.AudioClip Boom;
         [UnityEngine.SerializeField]
         private UnityEngine.AudioClip Bgm;
+        [UnityEngine.SerializeField]
+        private UnityEngine.AudioClip OpenFairyBall;
+        [UnityEngine.SerializeField]
+        private UnityEngine.AudioClip CustomerEnter;
+        [UnityEngine.SerializeField]
+        private UnityEngine.AudioClip CloseBox;
 
         public IEnumerator InitializeGame()
         {
@@ -82,7 +88,7 @@ namespace FloatSakujyo.Audio
         public void PlayZqddn_Zhb_right()
         {
 
-            PlaySound(Zqddn_Zhb_right)?.SetAutoRelease(true); 
+            PlaySound(Zqddn_Zhb_right)?.SetAutoRelease(true);
         }
         public void PlayWin()
         {
@@ -105,7 +111,7 @@ namespace FloatSakujyo.Audio
         public void PlayFly()
         {
 
-            PlaySound(Fly)?.SetAutoRelease(true); 
+            PlaySound(Fly)?.SetAutoRelease(true);
         }
         public void PlayFail()
         {
@@ -118,7 +124,7 @@ namespace FloatSakujyo.Audio
         public void PlayCut()
         {
 
-            PlaySound(Cut)?.SetAutoRelease(true); 
+            PlaySound(Cut)?.SetAutoRelease(true);
         }
         public void PlayCliCk()
         {
@@ -138,6 +144,19 @@ namespace FloatSakujyo.Audio
         public void PlayBgm()
         {
             PlayTheme(Bgm);
+        }
+
+        public void PlayOpenFairyBall()
+        {
+            PlaySound(OpenFairyBall)?.SetAutoRelease(true);
+        }
+        public void PlayCustomerEnter()
+        {
+            PlaySound(CustomerEnter)?.SetAutoRelease(true);
+        }
+        public void PlayCloseBox()
+        {
+            PlaySound(CloseBox)?.SetAutoRelease(true);
         }
     }
 }

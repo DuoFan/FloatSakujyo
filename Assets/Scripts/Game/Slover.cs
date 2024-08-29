@@ -21,6 +21,7 @@ namespace FloatSakujyo.Game
         [SerializeField]
         float waveAmplitude;
 
+        [SerializeField]
         List<Rigidbody> rigidbodies = new List<Rigidbody>();
         List<Mesh> meshes = new List<Mesh>();
 

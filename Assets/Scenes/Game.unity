@@ -224,7 +224,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 227775896}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 5, z: -0.25}
+  m_LocalPosition: {x: 0, y: 5, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1198,7 +1198,7 @@ MonoBehaviour:
   refCameraOrthoSize: {x: 11, y: 14}
   refColorGroupSlotViewWidth: {x: 9, y: 8.5}
   refNoneColorGroupSlotViewWidth: {x: 7.8, y: 7.8}
-  backupContent: {fileID: 1208160382}
+  refNoneColorGroupSlotOffset: {x: -0.5, y: 0, z: 0}
 --- !u!1 &1141200189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1773,6 +1773,7 @@ MonoBehaviour:
   buoyancyForce: 19.62
   waveFrequency: 3
   waveAmplitude: 0.1
+  rigidbodies: []
 --- !u!4 &1510337024
 Transform:
   m_ObjectHideFlags: 0
@@ -1789,6 +1790,37 @@ Transform:
   m_Father: {fileID: 1060057897}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1510815354
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1510815355}
+  m_Layer: 0
+  m_Name: CoinTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1510815355
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1510815354}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -4, y: 0, z: 10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6314053820854926807}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &1520421561
 GameObject:
   m_ObjectHideFlags: 0
@@ -3151,6 +3183,8 @@ MonoBehaviour:
   - {fileID: 1937992994}
   slotGoldStart: []
   isMoveRight: 0001010000
+  coin: {fileID: 3272079393434367209, guid: a1f59799cefb2d3499348ad049de0298, type: 3}
+  coinTarget: {fileID: 1510815355}
 --- !u!4 &6314053820854926807
 Transform:
   m_ObjectHideFlags: 0
@@ -3169,6 +3203,7 @@ Transform:
   - {fileID: 1590330651}
   - {fileID: 1937992993}
   - {fileID: 227775897}
+  - {fileID: 1510815355}
   m_Father: {fileID: 1141200190}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}

@@ -1,0 +1,212 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 842086b6ab674c4489da5a82ddc7ce26, type: 3}
+  m_Name: LevelData_43
+  m_EditorClassIdentifier: 
+  id: 43
+  subLevelDatas:
+  - itemColorGroupDatas:
+    - itemColor: 1
+      groupCount: 6
+    - itemColor: 2
+      groupCount: 6
+    - itemColor: 3
+      groupCount: 6
+    - itemColor: 4
+      groupCount: 6
+    totalItemCount: 72
+    isCustomColorGroup: 0
+    customColorGroupQueue: 
+    levelDifficultyDatas:
+    - leftItemCount: 234
+      maxGroupRandomValue: 100
+      n_MinThenMaxGroup: 99
+      maxSeriesMaxGroupCount: 99
+      maxItemRandomValue: 100
+      n_RandomThenMaxItem: 99
+      maxSeriesMaxItemCount: 99
+    - leftItemCount: 132
+      maxGroupRandomValue: 0
+      n_MinThenMaxGroup: 4
+      maxSeriesMaxGroupCount: 99
+      maxItemRandomValue: 0
+      n_RandomThenMaxItem: 4
+      maxSeriesMaxItemCount: 99
+    - leftItemCount: 114
+      maxGroupRandomValue: 100
+      n_MinThenMaxGroup: 1
+      maxSeriesMaxGroupCount: 2
+      maxItemRandomValue: 100
+      n_RandomThenMaxItem: 1
+      maxSeriesMaxItemCount: 2
+    - leftItemCount: 66
+      maxGroupRandomValue: 0
+      n_MinThenMaxGroup: 4
+      maxSeriesMaxGroupCount: 99
+      maxItemRandomValue: 0
+      n_RandomThenMaxItem: 4
+      maxSeriesMaxItemCount: 99
+    - leftItemCount: 42
+      maxGroupRandomValue: 100
+      n_MinThenMaxGroup: 1
+      maxSeriesMaxGroupCount: 2
+      maxItemRandomValue: 100
+      n_RandomThenMaxItem: 1
+      maxSeriesMaxItemCount: 2
+    - leftItemCount: 10
+      maxGroupRandomValue: 0
+      n_MinThenMaxGroup: 3
+      maxSeriesMaxGroupCount: 2
+      maxItemRandomValue: 0
+      n_RandomThenMaxItem: 3
+      maxSeriesMaxItemCount: 2
+    floatItemCount: 18
+  - itemColorGroupDatas:
+    - itemColor: 1
+      groupCount: 6
+    - itemColor: 2
+      groupCount: 6
+    - itemColor: 3
+      groupCount: 6
+    - itemColor: 4
+      groupCount: 6
+    - itemColor: 5
+      groupCount: 6
+    - itemColor: 6
+      groupCount: 6
+    - itemColor: 7
+      groupCount: 6
+    - itemColor: 8
+      groupCount: 6
+    - itemColor: 9
+      groupCount: 6
+    totalItemCount: 162
+    isCustomColorGroup: 0
+    customColorGroupQueue: 
+    levelDifficultyDatas:
+    - leftItemCount: 234
+      maxGroupRandomValue: 100
+      n_MinThenMaxGroup: 99
+      maxSeriesMaxGroupCount: 99
+      maxItemRandomValue: 100
+      n_RandomThenMaxItem: 99
+      maxSeriesMaxItemCount: 99
+    - leftItemCount: 132
+      maxGroupRandomValue: 0
+      n_MinThenMaxGroup: 4
+      maxSeriesMaxGroupCount: 99
+      maxItemRandomValue: 0
+      n_RandomThenMaxItem: 4
+      maxSeriesMaxItemCount: 99
+    - leftItemCount: 114
+      maxGroupRandomValue: 100
+      n_MinThenMaxGroup: 1
+      maxSeriesMaxGroupCount: 2
+      maxItemRandomValue: 100
+      n_RandomThenMaxItem: 1
+      maxSeriesMaxItemCount: 2
+    - leftItemCount: 66
+      maxGroupRandomValue: 0
+      n_MinThenMaxGroup: 4
+      maxSeriesMaxGroupCount: 99
+      maxItemRandomValue: 0
+      n_RandomThenMaxItem: 4
+      maxSeriesMaxItemCount: 99
+    - leftItemCount: 42
+      maxGroupRandomValue: 100
+      n_MinThenMaxGroup: 1
+      maxSeriesMaxGroupCount: 2
+      maxItemRandomValue: 100
+      n_RandomThenMaxItem: 1
+      maxSeriesMaxItemCount: 2
+    - leftItemCount: 10
+      maxGroupRandomValue: 0
+      n_MinThenMaxGroup: 3
+      maxSeriesMaxGroupCount: 2
+      maxItemRandomValue: 0
+      n_RandomThenMaxItem: 3
+      maxSeriesMaxItemCount: 2
+    floatItemCount: 18
+  - itemColorGroupDatas:
+    - itemColor: 1
+      groupCount: 6
+    - itemColor: 2
+      groupCount: 6
+    - itemColor: 3
+      groupCount: 6
+    - itemColor: 4
+      groupCount: 6
+    - itemColor: 5
+      groupCount: 6
+    - itemColor: 6
+      groupCount: 6
+    - itemColor: 7
+      groupCount: 6
+    - itemColor: 8
+      groupCount: 6
+    - itemColor: 9
+      groupCount: 6
+    - itemColor: 10
+      groupCount: 6
+    - itemColor: 11
+      groupCount: 6
+    - itemColor: 12
+      groupCount: 6
+    - itemColor: 13
+      groupCount: 6
+    totalItemCount: 234
+    isCustomColorGroup: 0
+    customColorGroupQueue: 
+    levelDifficultyDatas:
+    - leftItemCount: 234
+      maxGroupRandomValue: 100
+      n_MinThenMaxGroup: 99
+      maxSeriesMaxGroupCount: 99
+      maxItemRandomValue: 100
+      n_RandomThenMaxItem: 99
+      maxSeriesMaxItemCount: 99
+    - leftItemCount: 132
+      maxGroupRandomValue: 0
+      n_MinThenMaxGroup: 4
+      maxSeriesMaxGroupCount: 99
+      maxItemRandomValue: 0
+      n_RandomThenMaxItem: 4
+      maxSeriesMaxItemCount: 99
+    - leftItemCount: 114
+      maxGroupRandomValue: 100
+      n_MinThenMaxGroup: 1
+      maxSeriesMaxGroupCount: 2
+      maxItemRandomValue: 100
+      n_RandomThenMaxItem: 1
+      maxSeriesMaxItemCount: 2
+    - leftItemCount: 66
+      maxGroupRandomValue: 0
+      n_MinThenMaxGroup: 4
+      maxSeriesMaxGroupCount: 99
+      maxItemRandomValue: 0
+      n_RandomThenMaxItem: 4
+      maxSeriesMaxItemCount: 99
+    - leftItemCount: 42
+      maxGroupRandomValue: 100
+      n_MinThenMaxGroup: 1
+      maxSeriesMaxGroupCount: 2
+      maxItemRandomValue: 100
+      n_RandomThenMaxItem: 1
+      maxSeriesMaxItemCount: 2
+    - leftItemCount: 10
+      maxGroupRandomValue: 0
+      n_MinThenMaxGroup: 3
+      maxSeriesMaxGroupCount: 2
+      maxItemRandomValue: 0
+      n_RandomThenMaxItem: 3
+      maxSeriesMaxItemCount: 2
+    floatItemCount: 18

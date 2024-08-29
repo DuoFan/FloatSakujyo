@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Reflection;
+using FloatSakujyo.Audio;
 
 namespace FloatSakujyo.UI
 {
@@ -55,7 +56,7 @@ namespace FloatSakujyo.UI
             for (int i = 0; i < Slot.Items.Length; i++)
             {
                 var item = Slot.Items[i];
-                if(item != null)
+                if (item != null)
                 {
                     var point = slotPoints[i];
                     item.transform.SetParent(point);
@@ -78,7 +79,54 @@ namespace FloatSakujyo.UI
 
             filledText.text = $"{Slot.TotalSlotCount - Slot.EmptySlotCount}/{Slot.TotalSlotCount}";
 
-            yield return base.FillItem(item, index);
+            yield return null;
+
+            var time = 0.3f;
+
+            var point = slotPoints[index];
+
+            item.transform.SetParent(point);
+
+            item.ShowTrail();
+
+            var sequence = DOTween.Sequence();
+
+            sequence.Join(item.transform.DOLocalRotate(Quaternion.Euler(0, 10, 0) * fillLocalEulerAngle, time));
+            sequence.Join(item.transform.DOLocalMove(Vector3.up - Vector3.forward * 0.1f, time));
+            sequence.Join(item.transform.DOScale(Vector3.one, time));
+
+            yield return sequence.WaitForCompletion();
+
+            time = 0.2f;
+            for (int i = index - 1; i >= 0; i--)
+            {
+                var prevItem = Slot.Items[i];
+                if (prevItem == null)
+                {
+                    continue;
+                }
+                sequence = DOTween.Sequence();
+                sequence.Join(prevItem.transform.DOLocalMoveZ(-0.2f, time));
+                sequence.Join(prevItem.transform.DOScale(0.8f * Vector3.one, time));
+                sequence.Append(prevItem.transform.DOLocalMove(fillLocalPosition, time));
+                sequence.Join(prevItem.transform.DOScale(Vector3.one, time));
+                sequence.SetDelay(0.1f * (index - 1 - i));
+            }
+
+            sequence = DOTween.Sequence();
+
+            sequence.Join(item.transform.DOLocalMove(fillLocalPosition, time));
+
+            time = 0.2f;
+            sequence.Join(item.transform.DOLocalRotate(fillLocalEulerAngle, time));
+
+            yield return new WaitForSecondsRealtime(time / 2f);
+
+            AudioManager.Instance.PlayPut();
+
+            yield return sequence.WaitForCompletion();
+
+            item.HideTrail();
         }
 
         public override IEnumerator OnCompleted()
@@ -88,36 +136,48 @@ namespace FloatSakujyo.UI
 
             yield return base.OnCompleted();
 
-            Slot.OnFillItem -= FillItem;
-            Slot = null;
+            Tween t = null;
+
+            for (int i = 0; i < Slot.Items.Length; i++)
+            {
+                var item = Slot.Items[i];
+                if (item != null)
+                {
+                    t = item.transform.DOLocalJump(fillLocalPosition, 1, 1, 0.2f).SetDelay(0.1f * i);
+                }
+            }
+
+            yield return t.WaitForCompletion();
 
             animator.Play("close");
 
-           // var goldStart = colorGroupSlotView.SlotGoldStarts[selfIndex];
-
-            //GameUIManager.Instance.PlayFlyGold(goldStart);
+            AudioManager.Instance.PlayCloseBox();
 
             //盖子动画时间
             yield return new WaitForSecondsRealtime(0.25f);
 
+            Vector3[] coinPoses = new Vector3[slotPoints.Length];
+
             for (int i = 0; i < slotPoints.Length; i++)
             {
-                GameObject.Destroy(slotPoints[i].gameObject);
+                coinPoses[i] = slotPoints[i].position;
             }
 
-            //yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f);
-
-            //yield return transform.DOMove(transform.position + Vector3.up * 30, 0.2f).WaitForCompletion();
+            Slot.Dispose();
 
             yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1);
+
+            filledText.transform.parent.gameObject.CheckActiveSelf(false);
 
             seal.gameObject.CheckActiveSelf(true);
 
             yield return new WaitUntil(() => seal.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1);
 
-            gameObject.CheckActiveSelf(false);
+            boxRenderer.gameObject.CheckActiveSelf(false);
 
-            yield return colorGroupSlotView.PlayItemNeedViewExit(this, selfIndex);
+            StartCoroutine(colorGroupSlotView.PlayItemNeedViewExit(this, selfIndex));
+
+            yield return colorGroupSlotView.FlyCoins(coinPoses);
 
             GameObject.Destroy(itemNeedView.gameObject);
 

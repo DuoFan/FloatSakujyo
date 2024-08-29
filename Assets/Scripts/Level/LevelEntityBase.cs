@@ -10,9 +10,9 @@ namespace FloatSakujyo.Level
 {
     public abstract class LevelEntityBase : MonoBehaviour, IDisposable
     {
-        public LevelData LevelData { get; protected set; }
+        public SubLevelData SubLevelData { get; protected set; }
 
-        public abstract IEnumerator Init(LevelData _levelData);
+        public abstract IEnumerator Init(SubLevelData _levelData,ColorGroupSloter colorGroupSloter);
 
         public virtual void Dispose()
         {

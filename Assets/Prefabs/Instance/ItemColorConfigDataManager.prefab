@@ -66,14 +66,18 @@ MonoBehaviour:
     boxTexture: {fileID: 0}
     coverTexture: {fileID: 0}
   - itemColor: 6
-    item: {fileID: 3028139468043366452, guid: c9de9b2b4f38f90439060b6b98d4a6a4, type: 3}
+    item: {fileID: 5931586383691768882, guid: 6072dc98ee7cf3f4baeb2ff846737d4e, type: 3}
     boxTexture: {fileID: 0}
     coverTexture: {fileID: 0}
   - itemColor: 7
-    item: {fileID: 799941274836498693, guid: a7fc671effd7e354984818e203c419eb, type: 3}
+    item: {fileID: 3028139468043366452, guid: c9de9b2b4f38f90439060b6b98d4a6a4, type: 3}
     boxTexture: {fileID: 0}
     coverTexture: {fileID: 0}
   - itemColor: 8
+    item: {fileID: 799941274836498693, guid: a7fc671effd7e354984818e203c419eb, type: 3}
+    boxTexture: {fileID: 0}
+    coverTexture: {fileID: 0}
+  - itemColor: 9
     item: {fileID: 5578043407711505542, guid: 158b29e34403f2041bc2b9a674684749, type: 3}
     boxTexture: {fileID: 0}
     coverTexture: {fileID: 0}

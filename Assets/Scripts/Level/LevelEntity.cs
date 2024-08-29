@@ -19,22 +19,16 @@ namespace FloatSakujyo.Level
 
         public ColorGroupSloter ColorGroupSloter { get; private set; }
 
-        public int TotalItemCount { get; private set; }
-        public int itemCount;
         int n_RandomThenMaxItem;
         int maxSeriesMaxItemCount;
 
-        public override IEnumerator Init(LevelData levelData)
+        public override IEnumerator Init(SubLevelData levelData,ColorGroupSloter colorGroupSloter)
         {
-            LevelData = levelData;
+            SubLevelData = levelData;
 
             Array.Sort(levelData.LevelDifficultyDatas, (x, y) => x.LeftItemCount.CompareTo(y.LeftItemCount));
 
-            ColorGroupSloter = LevelUtils.GenerateColorQueueSloter(levelData, 6, true, out var _colorGroupQueues);
-
-            TotalItemCount = _colorGroupQueues.Count * 3;
-
-            itemCount = TotalItemCount;
+            ColorGroupSloter = colorGroupSloter; 
 
             leftItemCounts = LevelUtils.GetColorGroupCounts(levelData);
             for (int i = 0; i < leftItemCounts.Length; i++)
@@ -42,7 +36,7 @@ namespace FloatSakujyo.Level
                 leftItemCounts[i] *= 3;
             }
 
-            SpawnIndex = TotalItemCount;
+            SpawnIndex = SubLevelData.TotalItemCount;
             n_RandomThenMaxItem = 0;
             maxSeriesMaxItemCount = 0;
 
@@ -56,11 +50,11 @@ namespace FloatSakujyo.Level
             {
                 LevelDifficultyData curDifficultyData = null;
                 int index;
-                for (int j = 0; j < LevelData.LevelDifficultyDatas.Length; j++)
+                for (int j = 0; j < SubLevelData.LevelDifficultyDatas.Length; j++)
                 {
-                    if (SpawnIndex <= LevelData.LevelDifficultyDatas[j].LeftItemCount)
+                    if (SpawnIndex <= SubLevelData.LevelDifficultyDatas[j].LeftItemCount)
                     {
-                        curDifficultyData = LevelData.LevelDifficultyDatas[j];
+                        curDifficultyData = SubLevelData.LevelDifficultyDatas[j];
                         break;
                     }
                 }
@@ -91,7 +85,7 @@ namespace FloatSakujyo.Level
                     index = LevelUtils.FindMaxIndexInArray(leftItemCounts);
                 }
 
-                var itemColor = LevelData.ItemColorGroupDatas[index].ItemColor;
+                var itemColor = SubLevelData.ItemColorGroupDatas[index].ItemColor;
 
                 items[i] = SpawnItemByItemColor(itemColor, generation);
             }
@@ -101,7 +95,7 @@ namespace FloatSakujyo.Level
 
         public Item SpawnItemByItemColor(ItemColor itemColor,ItemGeneration generation)
         {
-            var index = Array.IndexOf(LevelData.ItemColorGroupDatas, LevelData.ItemColorGroupDatas.FirstOrDefault(x => x.ItemColor == itemColor));
+            var index = Array.IndexOf(SubLevelData.ItemColorGroupDatas, SubLevelData.ItemColorGroupDatas.FirstOrDefault(x => x.ItemColor == itemColor));
             leftItemCounts[index]--;
 
             var itemConfigData = ItemColorConfigDataManager.Instance.GetConfigData(itemColor);
@@ -111,17 +105,6 @@ namespace FloatSakujyo.Level
             SpawnIndex--;
 
             return item;
-        }
-
-        public float GetProgress()
-        {
-            return 1 - (float)itemCount / TotalItemCount;
-        }
-
-        public override void Dispose()
-        {
-            ColorGroupSloter.Dispose();
-            base.Dispose();
         }
     }
 }

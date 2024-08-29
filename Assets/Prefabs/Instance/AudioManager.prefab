@@ -52,9 +52,12 @@ MonoBehaviour:
   PoP: {fileID: 8300000, guid: ebb6ba2cb84c2a8448bbfd03a83a259c, type: 3}
   Fly: {fileID: 8300000, guid: 899189e485b05dd45a6169917806b121, type: 3}
   Fail: {fileID: 8300000, guid: ae17a2a6aa1b5d141910cf477796431f, type: 3}
-  Done: {fileID: 8300000, guid: 1f8345839c0a5004ea92d341362ceed1, type: 3}
+  Done: {fileID: 8300000, guid: 681d3673f5b9d114ebe0fbaf331b76ee, type: 3}
   Cut: {fileID: 8300000, guid: 8e5075380d6f6e2458b415e8a81488a3, type: 3}
   CliCk: {fileID: 8300000, guid: a5514d102a2b38048ad36c2d0af876b8, type: 3}
   Citywin: {fileID: 8300000, guid: ff85e633844bcd24d8fd674de4c14d6f, type: 3}
   Boom: {fileID: 8300000, guid: 9e21073d03dab3644b08113f35c47491, type: 3}
   Bgm: {fileID: 8300000, guid: 99bf58d97683efa428f03dba2d9f0c8f, type: 3}
+  OpenFairyBall: {fileID: 8300000, guid: 72bab073efe84d4488de7db539573e8d, type: 3}
+  CustomerEnter: {fileID: 8300000, guid: 36f10d58e7577fb43ac9f92170e68c63, type: 3}
+  CloseBox: {fileID: 8300000, guid: 5201c95401e685f4d94f2ca25c2db30d, type: 3}

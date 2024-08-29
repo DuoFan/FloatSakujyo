@@ -49,11 +49,17 @@ namespace FloatSakujyo.Editor
             HashSet<int> itemIDs = new HashSet<int>();
             for (int i = 0; i < refLevelDatas.Length; i++)
             {
+                if (refLevelDatas[i].maxNum < 30)
+                {
+                    continue;
+                }
+
+
                 var floatItemCount = refLevelDatas[i].data.Sum(x => x > 0 ? 1 : 0);
 
                 if (floatItemCount > maxFloatItemCount)
                 {
-                    continue;
+                    floatItemCount = maxFloatItemCount;
                 }
 
                 var levelData = ScriptableObject.CreateInstance<LevelData>();
@@ -99,11 +105,22 @@ namespace FloatSakujyo.Editor
                     itemIDs.Add(refLevelDatas[i].itemId[j]);
                 }
 
-                levelData.Init(levelID, levelItemColorGroupDatas, false, null, levelDifficultyDatas, floatItemCount);
+                SubLevelData[] subLevelDatas = new SubLevelData[3];
+                for (int j = 0; j < subLevelDatas.Length; j++)
+                {
+                    float coex = (j + 1) / 3f;
+                    var length = Mathf.RoundToInt(levelItemColorGroupDatas.Length * coex);
+                    var _levelItemColorGroupDatas = new LevelItemColorGroupData[length];
+                    Array.Copy(levelItemColorGroupDatas, _levelItemColorGroupDatas, length);
+                    var subLevelData = new SubLevelData(_levelItemColorGroupDatas, false, null, levelDifficultyDatas, floatItemCount);
+                    subLevelDatas[j] = subLevelData;
+                }
+
+                levelData.Init(levelID, subLevelDatas);
 
                 maxItemColorCount = Mathf.Max(maxItemColorCount, levelItemColorGroupDatas.Length);
 
-                AssetDatabase.CreateAsset(levelData, $"{folderPath}/LevelData_{refLevelDatas[i].id}.asset");
+                AssetDatabase.CreateAsset(levelData, $"{folderPath}/LevelData_{levelID}.asset");
 
                 levelID++;
             }

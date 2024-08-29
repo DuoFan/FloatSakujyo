@@ -19,6 +19,9 @@ namespace FloatSakujyo.Game
     public class GameController : GameControllerBase
     {
         public static GameController Instance { get; private set; }
+
+        public LevelData LevelData { get; private set; }
+
         public LevelEntity LevelEntity { get; private set; }
 
         public InputController InputController { get; private set; }
@@ -72,10 +75,19 @@ namespace FloatSakujyo.Game
         Vector2 refColorGroupSlotViewWidth;
         [SerializeField]
         Vector2 refNoneColorGroupSlotViewWidth;
+        [SerializeField]
+        Vector3 refNoneColorGroupSlotOffset;
 
         Transform backupContent;
+        Transform iceContent;
+
+        ColorGroupSloter colorGroupSloter;
 
         public event Action OnItemTook;
+
+        int subLevelID;
+        int levelTookItemCount;
+        public int TotalItemCount { get; private set; }
         protected override void Internal_FreezeGameplay()
         {
 
@@ -144,18 +156,30 @@ namespace FloatSakujyo.Game
 
             var runtimeNoneColorGroupSlotViewWidth = refNoneColorGroupSlotViewWidth.x + runtimeAspectRatio * (refNoneColorGroupSlotViewWidth.y - refNoneColorGroupSlotViewWidth.x);
             colorGroupSlotView.InitNoneColorGroupSlotUIPosition(runtimeNoneColorGroupSlotViewWidth);
+
+            Vector3 runtimeNoneColorGroupSlotOffset = runtimeAspectRatio * refNoneColorGroupSlotOffset;
+            colorGroupSlotView.InitNoneColorGroupSlotOffset(runtimeNoneColorGroupSlotOffset);
         }
 
         protected IEnumerator StartLevel(LevelData levelData)
         {
+            LevelData = levelData;
+
+            colorGroupSloter = new ColorGroupSloter(2, 6, true);
+
+            TotalItemCount = 0;
+            for (int i = 0; i < levelData.SubLevelDatas.Length; i++)
+            {
+                TotalItemCount += levelData.SubLevelDatas[i].TotalItemCount;
+            }
+
             LoadingPanel.Instance?.Show();
 
-            FreezeGameplay();
+            yield return StartSubLevel(0);
 
-            yield return CreateLevelEntity(levelData);
+            colorGroupSlotView.Init(colorGroupSloter);
 
-            backupContent = new GameObject("BackupContent").transform;
-            backupContent.SetParent(LevelEntity.transform);
+            OnItemTook = null;
 
             InitIces();
 
@@ -173,16 +197,31 @@ namespace FloatSakujyo.Game
                 GameUIManager.Instance.CloseItemUnlockProgressPanel();
             }
 
-            itemGridCount = Mathf.Min(levelData.FloatItemCount, LevelEntity.TotalItemCount);
+            LoadingPanel.Instance?.Hide();
+        }
+
+        IEnumerator StartSubLevel(int _subLevelID)
+        {
+            subLevelID = _subLevelID;
+
+            var subLevelData = LevelData.SubLevelDatas[subLevelID];
+
+            FreezeGameplay();
+
+            yield return CreateLevelEntity(subLevelData);
+
+            levelTookItemCount = 0;
+
+            backupContent = new GameObject("BackupContent").transform;
+            backupContent.SetParent(LevelEntity.transform);
+
+            itemGridCount = Mathf.Min(subLevelData.FloatItemCount, subLevelData.TotalItemCount);
             var oldItems = LevelEntity.SpawnItems(itemGridCount, ItemGeneration.Old);
 
-            var edenItemCount = Mathf.Min(levelData.FloatItemCount, LevelEntity.TotalItemCount - itemGridCount);
+            var edenItemCount = Mathf.Min(subLevelData.FloatItemCount, subLevelData.TotalItemCount - itemGridCount);
 
             var edenItems = LevelEntity.SpawnItems(edenItemCount, ItemGeneration.Eden);
 
-            var itemBounds = oldItems[0].GetComponent<Collider>().bounds;
-
-            //itemGrids = CalculateGrids(itemGridCount, itemBounds, positionArea);
             itemGrids = new ItemGrid[itemGridCount];
             for (int i = 0; i < itemGrids.Length; i++)
             {
@@ -209,8 +248,6 @@ namespace FloatSakujyo.Game
 
             isFaild = false;
             isCompleted = false;
-
-            LoadingPanel.Instance?.Hide();
         }
 
         ItemGrid[] CalculateGrids(int itemAmount, Bounds itemBounds, Vector3 positionArea)
@@ -266,8 +303,6 @@ namespace FloatSakujyo.Game
             return grids;
         }
 
-
-
         Vector2 CalculateGridPositionByIndex(int itemAmount, Bounds itemBounds, Vector3 positionArea, int gridIndex)
         {
             var widthCount = Mathf.Ceil(Mathf.Sqrt(itemAmount));
@@ -318,6 +353,8 @@ namespace FloatSakujyo.Game
 
         private void InitIces()
         {
+            iceContent = new GameObject("IceContent").transform;
+            iceContent.SetParent(transform);
             var iceBounds = icePrototype.GetComponent<MeshFilter>().sharedMesh.bounds;
             for (int i = 0; i < iceCount; i++)
             {
@@ -325,7 +362,7 @@ namespace FloatSakujyo.Game
                 ice.transform.rotation = UnityEngine.Random.rotation;
                 var gridPos = CalculateGridPositionByIndex(iceCount, iceBounds, positionArea * 0.7f, i);
                 ice.transform.position = new Vector3(gridPos.x, 3, gridPos.y);
-                ice.transform.SetParent(LevelEntity.transform);
+                ice.transform.SetParent(iceContent);
                 var iceRigidbody = ice.GetComponent<Rigidbody>();
                 iceRigidbody.isKinematic = true;
                 slover.AddRigidbody(iceRigidbody);
@@ -393,15 +430,16 @@ namespace FloatSakujyo.Game
             return null;
         }
 
-        IEnumerator CreateLevelEntity(LevelData levelData)
+        IEnumerator CreateLevelEntity(SubLevelData levelData)
         {
-            var handle = LevelUtils.CreateLevelEntity(levelData);
+            var colorGroupQueue = LevelUtils.GenerateColorGroupQueue(levelData);
+
+            colorGroupSloter.SetColorGroupQueues(colorGroupQueue);
+
+            var handle = LevelUtils.CreateLevelEntity(levelData, colorGroupSloter);
             yield return handle.WaitForCompletion();
 
             LevelEntity = handle.Object;
-            var sloter = LevelEntity.ColorGroupSloter;
-
-            colorGroupSlotView.Init(sloter);
 
             InputController.SetLevelEntity(LevelEntity);
 
@@ -475,8 +513,6 @@ namespace FloatSakujyo.Game
                 TryCreateNewEdenItem(edenItemGrid);
             }
 
-            LevelEntity.itemCount--;
-
             int index = slot.AllocateIndexForItem(item);
 
             bool isSlotFilled = !slot.HasEmptySlot();
@@ -513,12 +549,22 @@ namespace FloatSakujyo.Game
                 }
             }
 
-            if (LevelEntity.itemCount == 0 && !isFaild && !isCompleted)
-            {
-                yield return new WaitUntil(() => colorGroupSloter.GeneratingSlotGroupCount <= 0);
+            levelTookItemCount++;
 
+            if (levelTookItemCount == LevelData.SubLevelDatas[subLevelID].TotalItemCount && !isFaild && !isCompleted)
+            {
                 isCompleted = true;
-                OnGameCompleted();
+
+                yield return new WaitUntil(() => colorGroupSloter.CompletingSlotGroupCount <= 0);
+
+                if (subLevelID < LevelData.SubLevelDatas.Length - 1)
+                {
+                    OnSubLevelCompleted();
+                }
+                else
+                {
+                    OnGameCompleted();
+                }
             }
 
             yield break;
@@ -568,40 +614,40 @@ namespace FloatSakujyo.Game
             for (int i = 0; i < sloter.ColorGroupSlots.Length; i++)
             {
                 var _slot = sloter.ColorGroupSlots[i];
-                if(_slot == null || _slot.ItemColor == ItemColor.None || !_slot.Useable)
+                if (_slot == null || _slot.ItemColor == ItemColor.None || !_slot.Useable)
                 {
                     continue;
                 }
 
-                if(slot == null || _slot.EmptySlotCount > slot.EmptySlotCount)
+                if (slot == null || _slot.EmptySlotCount > slot.EmptySlotCount)
                 {
                     slot = _slot;
                 }
             }
 
-            if(slot == null)
+            if (slot == null)
             {
                 return;
             }
 
             var emptySlotCount = slot.EmptySlotCount;
-            while(emptySlotCount > 0)
+            while (emptySlotCount > 0)
             {
                 Item item = null;
                 foreach (var _item in OldItems)
                 {
-                    if(_item.ItemColor == slot.ItemColor)
+                    if (_item.ItemColor == slot.ItemColor)
                     {
                         item = _item;
                         break;
                     }
                 }
 
-                if(item == null)
+                if (item == null)
                 {
                     foreach (var _item in edenItemQueue)
                     {
-                        if(_item.ItemColor == slot.ItemColor)
+                        if (_item.ItemColor == slot.ItemColor)
                         {
                             item = _item;
                             break;
@@ -610,13 +656,13 @@ namespace FloatSakujyo.Game
                 }
 
 
-                if(item == null)
+                if (item == null)
                 {
                     item = LevelEntity.SpawnItemByItemColor(slot.ItemColor, ItemGeneration.Old);
                     var randomIndex = UnityEngine.Random.Range(0, itemGrids.Length);
                     InitItem(item, itemGrids[randomIndex]);
                 }
-                else if(item.ItemGeneration == ItemGeneration.Eden)
+                else if (item.ItemGeneration == ItemGeneration.Eden)
                 {
                     var edenItemGrid = FindItemGird(item);
                     OnEdenToOld(item);
@@ -631,7 +677,7 @@ namespace FloatSakujyo.Game
 
         public void Rearrange()
         {
-            if(edenItemQueue.Count <= 0)
+            if (edenItemQueue.Count <= 0)
             {
                 return;
             }
@@ -651,14 +697,14 @@ namespace FloatSakujyo.Game
 
             List<ItemColor> urgentColors = FindUrgentColors();
 
-            while(oldItemCount > 0 && urgentColors.Count > 0)
+            while (oldItemCount > 0 && urgentColors.Count > 0)
             {
                 var itemColor = urgentColors[0];
                 urgentColors.RemoveAt(0);
                 for (int i = waitToRearrangeItems.Count - 1; i >= 0 && oldItemCount > 0; i--)
                 {
                     var item = waitToRearrangeItems[i];
-                    if(item.ItemColor == itemColor)
+                    if (item.ItemColor == itemColor)
                     {
                         oldItemCount--;
                         waitToRearrangeItems.RemoveAt(i);
@@ -668,7 +714,7 @@ namespace FloatSakujyo.Game
                 }
             }
 
-            while(oldItemCount > 0)
+            while (oldItemCount > 0)
             {
                 var randomIndex = UnityEngine.Random.Range(0, waitToRearrangeItems.Count);
                 var item = waitToRearrangeItems[randomIndex];
@@ -748,28 +794,56 @@ namespace FloatSakujyo.Game
 
         public virtual void Restart()
         {
-            var levelData = LevelEntity.LevelData;
-            DisposeLevel();
-            StartCoroutine(StartLevel(levelData));
+            DisposeLevelEntity();
+            DisposeIces();
+            colorGroupSloter.Dispose();
+            StartCoroutine(StartLevel(LevelData));
         }
 
         public void NextLevel()
         {
-            DisposeLevel();
+            DisposeLevelEntity();
+            DisposeIces();
+            colorGroupSloter.Dispose();
             var levelData = LevelDataManager.Instance.GetData(GameDataManager.Instance.GetLevelID());
             StartCoroutine(StartLevel(levelData));
         }
 
-        void DisposeLevel()
+        void DisposeLevelEntity()
         {
+            foreach (var item in OldItems)
+            {
+                slover.RemoveRigidbody(item.Rigidbody);
+            }
+            foreach (var item in edenItemQueue)
+            {
+                if (!item.Rigidbody.isKinematic)
+                {
+                    slover.RemoveRigidbody(item.Rigidbody);
+                }
+            }
             LevelEntity.Dispose();
-            slover.ClearRigidbodys();
-            OnItemTook = null;
+        }
+
+        void DisposeIces()
+        {
+            var rigidbodies = iceContent.GetComponentsInChildren<Rigidbody>();
+            for (int i = rigidbodies.Length - 1; i >= 0; i--)
+            {
+                slover.RemoveRigidbody(rigidbodies[i]);
+            }
+            Destroy(iceContent.gameObject);
         }
 
         public float GetLevelProgress()
         {
-            return LevelEntity.GetProgress();
+            int totalTookItemCount = levelTookItemCount;
+            for (int i = 0; i < subLevelID; i++)
+            {
+                totalTookItemCount += LevelData.SubLevelDatas[i].TotalItemCount;
+            }
+
+            return totalTookItemCount / (float)TotalItemCount;
         }
 
         public float GetReadablelProgress()
@@ -777,9 +851,16 @@ namespace FloatSakujyo.Game
             return GetLevelProgress() * 100;
         }
 
+
+        protected void OnSubLevelCompleted()
+        {
+            DisposeLevelEntity();
+            StartCoroutine(StartSubLevel(subLevelID + 1));
+        }
+
         protected virtual void OnGameCompleted()
         {
-            var level = LevelDataManager.Instance.GetNextLevel(LevelEntity.LevelData);
+            var level = LevelDataManager.Instance.GetNextLevel(LevelData);
             if (level == null)
             {
                 level = LevelDataManager.Instance.GetFirstLevel();

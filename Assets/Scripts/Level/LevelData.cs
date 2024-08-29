@@ -16,36 +16,13 @@ namespace FloatSakujyo.Level
         public string DataName => $"关卡{ID}";
 
         [SerializeField]
-        LevelItemColorGroupData[] itemColorGroupDatas;
-        public LevelItemColorGroupData[] ItemColorGroupDatas => itemColorGroupDatas;
+        SubLevelData[] subLevelDatas;
+        public SubLevelData[] SubLevelDatas => subLevelDatas;
 
-        [SerializeField]
-        bool isCustomColorGroup;
-        public bool IsCustomColorGroup => isCustomColorGroup;
-
-        [SerializeField]
-        ItemColor[] customColorGroupQueue;
-        public ItemColor[] CustomColorGroupQueue => customColorGroupQueue;
-
-        [SerializeField]
-        LevelDifficultyData[] levelDifficultyDatas;
-        public LevelDifficultyData[] LevelDifficultyDatas => levelDifficultyDatas;
-
-
-        [SerializeField, Header("漂浮的物品数量")]
-        int floatItemCount = 10;
-        public int FloatItemCount => floatItemCount;
-
-        public void Init(int id, LevelItemColorGroupData[] itemColorGroupDatas, bool isCustomColorGroup, ItemColor[] customColorGroupQueue,
-            LevelDifficultyData[] levelDifficultyDatas, int floatItemCount)
+        public void Init(int id, SubLevelData[] subLevelDatas)
         {
             this.id = id;
-
-            this.itemColorGroupDatas = itemColorGroupDatas;
-            this.isCustomColorGroup = isCustomColorGroup;
-            this.customColorGroupQueue = customColorGroupQueue;
-            this.levelDifficultyDatas = levelDifficultyDatas;
-            this.floatItemCount = floatItemCount;
+            this.subLevelDatas = subLevelDatas;
         }
     }
 }

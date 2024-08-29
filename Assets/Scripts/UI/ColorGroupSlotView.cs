@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using FloatSakujyo.Audio;
 
 namespace FloatSakujyo.UI
 {
@@ -33,6 +34,13 @@ namespace FloatSakujyo.UI
 
         bool[] isCompleting;
 
+        [SerializeField]
+        GameObject coin;
+        public GameObject Coin => coin;
+
+        [SerializeField]
+        Transform coinTarget;
+
         public void InitSlotUIPosition(float width)
         {
             slotUILocalPoses = new Vector3[slotUIs.Length];
@@ -56,16 +64,28 @@ namespace FloatSakujyo.UI
             (slotUIs[0] as NoneColorGroupSlotUI).SetGroupSlotWidth(width);
         }
 
+        public void InitNoneColorGroupSlotOffset(Vector3 offset)
+        {
+            (slotUIs[0] as NoneColorGroupSlotUI).transform.position += offset;
+        }
+
         public void Init(ColorGroupSloter _sloter)
         {
             Sloter = _sloter;
 
-            for (int i = 0; i < SlotUIs.Length; i++)
+            //重新生成槽位
+            for (int i = ColorGroupSloter.NONE_COLOR_GROUP_SLOT_INDEX + 1; i < SlotUIs.Length; i++)
             {
-                if (SlotUIs[i] == null)
+                if (SlotUIs[i] != null)
                 {
-                    CreateSlotForIndex(i);
+                    SlotUIs[i].StopAllCoroutines();
+                    if (SlotUIs[i] is BoxColorGroupSlotUI boxColorGroupSlotUI)
+                    {
+                        GameObject.Destroy(boxColorGroupSlotUI.ItemNeedView.gameObject);
+                    }
+                    GameObject.Destroy(SlotUIs[i].gameObject);
                 }
+                CreateSlotForIndex(i);
             }
 
 
@@ -76,6 +96,7 @@ namespace FloatSakujyo.UI
                     continue;
                 }
 
+                SlotUIs[i].transform.localPosition = slotUILocalPoses[i];
                 SlotUIs[i].Init(Sloter.ColorGroupSlots[i]);
             }
 
@@ -119,7 +140,11 @@ namespace FloatSakujyo.UI
         {
             isCompleting[index] = true;
 
+            Sloter.AddCompletingSlotGroup();
+
             yield return slotUI.OnCompleted();
+
+            Sloter.RemoveCompletingSlotGroup();
 
             isCompleting[index] = false;
         }
@@ -143,7 +168,7 @@ namespace FloatSakujyo.UI
                             slotUIs[i].transform.localPosition = slotUILocalPoses[slotUILocalPoses.Length - 1] + Vector3.right * 5;
                         }
                         slot.SetUseable(false);
-                        StartCoroutine(WaitForSlotUIEntered(slotUIs[i], slot, slotUILocalPoses[i]));
+                        slotUIs[i].StartCoroutine(WaitForSlotUIEntered(slotUIs[i], slot, slotUILocalPoses[i]));
                         return;
                     }
                 }
@@ -177,7 +202,7 @@ namespace FloatSakujyo.UI
             {
                 Sloter.TryCompleteSlot();
             }
-            Sloter.RemoveCompletingSlotGroup();
+            Sloter.RemoveGeneratingSlotGroup();
         }
 
         public IEnumerator PlayItemNeedViewEnter(BoxColorGroupSlotUI boxColorGroupSlotUI)
@@ -211,11 +236,14 @@ namespace FloatSakujyo.UI
             pos.y += itemNeedView.Avatar.rectTransform.rect.size.y * 0.8f;
             pos.z += 500;
 
+            AudioManager.Instance.PlayCustomerEnter();
+
+            var itemColor = boxColorGroupSlotUI.Slot.ItemColor;
+
             yield return itemNeedViewRectTrans.DOAnchorPos3D(pos, 1f).SetEase(Ease.OutBack).WaitForCompletion();
 
             itemNeedViewRectTrans.anchoredPosition3D = pos;
 
-            var itemColor = boxColorGroupSlotUI.Slot.ItemColor;
             var itemManager = ItemColorConfigDataManager.Instance;
             var item = GameObject.Instantiate(itemManager.GetConfigData(itemColor).Item, itemNeedView.ItemPlace);
             //删除Item组件避免被点击
@@ -247,6 +275,22 @@ namespace FloatSakujyo.UI
             itemNeedViewRectTrans.SetSiblingIndex(2);
 
             yield return itemNeedViewRectTrans.DOAnchorPos3D(pos, 1f).WaitForCompletion();
+        }
+
+        public IEnumerator FlyCoins(Vector3[] poses)
+        {
+            for (int i = 0; i < poses.Length; i++)
+            {
+                var coin = Instantiate(Coin, transform);
+                coin.transform.position = poses[i];
+
+                coin.transform.DOMove(coinTarget.transform.position, 1f).SetEase(Ease.InCubic).OnComplete(() =>
+                {
+                    GameObject.Destroy(coin);
+                });
+
+                yield return new WaitForSeconds(0.1f);
+            }
         }
     }
 }

@@ -13,16 +13,16 @@ namespace FloatSakujyo.Level
 {
     public static class LevelUtils
     {
-        public static AsyncGetHandle<LevelEntity> CreateLevelEntity(LevelData levelData)
+        public static AsyncGetHandle<LevelEntity> CreateLevelEntity(SubLevelData levelData, ColorGroupSloter colorGroupSloter)
         {
             var handle = new AsyncGetHandle<LevelEntity>();
-            var levelEntity = new GameObject($"LevelEntity{levelData.ID}").AddComponent<LevelEntity>();
+            var levelEntity = new GameObject($"LevelEntity").AddComponent<LevelEntity>();
 
             CoroutineManager.Instance.StartCoroutine(WaitForInitLevel());
 
             IEnumerator WaitForInitLevel()
             {
-                yield return levelEntity.Init(levelData);
+                yield return levelEntity.Init(levelData, colorGroupSloter);
                 handle.SetResult(levelEntity);
             }
 
@@ -30,8 +30,9 @@ namespace FloatSakujyo.Level
         }
 
 
-        public static ColorGroupSloter GenerateColorQueueSloter(LevelData levelData, int defaultNoneGroupSlotCount, bool isGroupDefalutUseable, out List<ItemColor> colorGroupQueues)
+        public static List<ItemColor> GenerateColorGroupQueue(SubLevelData levelData)
         {
+            List<ItemColor> colorGroupQueues = null;
             if (levelData.IsCustomColorGroup && levelData.ItemColorGroupDatas.Length > 0)
             {
                 colorGroupQueues = new List<ItemColor>(levelData.CustomColorGroupQueue);
@@ -94,10 +95,10 @@ namespace FloatSakujyo.Level
                     itemCount -= 3;
                 }
             }
-            return new ColorGroupSloter(new List<ItemColor>(colorGroupQueues), defaultNoneGroupSlotCount, isGroupDefalutUseable);
+            return colorGroupQueues;
         }
 
-        public static int[] GetColorGroupCounts(LevelData levelData)
+        public static int[] GetColorGroupCounts(SubLevelData levelData)
         {
             int[] colorGroupCounts = new int[levelData.ItemColorGroupDatas.Length];
             for (int i = 0; i < levelData.ItemColorGroupDatas.Length; i++)

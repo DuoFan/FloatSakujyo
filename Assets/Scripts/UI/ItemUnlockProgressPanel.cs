@@ -64,7 +64,11 @@ namespace FloatSakujyo.UI
 
             fairyBall.AnimationState.SetAnimation(0, "idle1", false);
             var time = fairyBall.AnimationState.GetCurrent(0).AnimationEnd;
-            yield return new WaitForSeconds(time);
+
+            yield return new WaitForSecondsRealtime(time * 0.4f);
+            AudioManager.Instance.PlayOpenFairyBall();
+
+            yield return new WaitForSecondsRealtime(time * 0.6f);
             fairyBall.AnimationState.SetAnimation(0, "idle2", true);
         }
     }
