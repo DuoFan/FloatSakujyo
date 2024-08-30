@@ -35,6 +35,10 @@ namespace FloatSakujyo.Level
         int floatItemCount = 10;
         public int FloatItemCount => floatItemCount;
 
+        [SerializeField, Header("解锁物品ID")]
+        int[] unlockItemIDs;
+        public int[] UnlockItemIDs => unlockItemIDs;
+
         public SubLevelData(LevelItemColorGroupData[] itemColorGroupDatas, bool isCustomColorGroup, ItemColor[] customColorGroupQueue,
             LevelDifficultyData[] levelDifficultyDatas, int floatItemCount)
         {
