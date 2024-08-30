@@ -10,7 +10,7 @@ namespace FloatSakujyo.SaveData
     public class GameData : GameDataBase
     {
         public bool IsFirstGame { get; set; }
-        public int LevelID { get; set; }
+        public LevelHistoryData LevelHistoryData { get; set; }
         public TutorialHistoryData TutorialHistoryData { get; set; }
 
         public PlayerPreference PlayerPreference { get; set; }  
@@ -21,10 +21,10 @@ namespace FloatSakujyo.SaveData
 
         [JsonConstructor]
         public GameData(TimeRecord lastExitTime, Dictionary<string, string> savedData,
-            SignedHistoryData signedHistoryData, int levelID, bool isFirstGame, TutorialHistoryData tutorialHistoryData,
+            SignedHistoryData signedHistoryData, LevelHistoryData levelHistoryData, bool isFirstGame, TutorialHistoryData tutorialHistoryData,
             PlayerPreference playerPreference, ShareHistoryData shareHistoryData, HelperCountData helperCountData) : base(lastExitTime, savedData, signedHistoryData)
         {
-            LevelID = levelID;
+            LevelHistoryData = levelHistoryData;
             IsFirstGame = isFirstGame;
             TutorialHistoryData = tutorialHistoryData;
             PlayerPreference = playerPreference;

@@ -46,7 +46,7 @@ namespace FloatSakujyo.SaveData
             {
                 GameExtension.Logger.Log("初始化游戏数据----");
                 //关卡从1开始
-                gameData = new GameData(default, default, default, 1, true, default, default, default, default);
+                gameData = new GameData(default, default, default, default, true, default, default, default, default);
                 GameExtension.Logger.Log("初始化游戏数据成功----");
             }
             yield break;
@@ -77,16 +77,39 @@ namespace FloatSakujyo.SaveData
             gameData.IsFirstGame = false;
         }
 
+        #region Level
+
+        public LevelHistoryData GetLevelHistoryData()
+        {
+            if (gameData.LevelHistoryData == null)
+            {
+                gameData.LevelHistoryData = new LevelHistoryData(1, 0);
+            }
+            return gameData.LevelHistoryData;
+        }
+
         public int GetLevelID()
         {
-            return gameData.LevelID;
+            return GetLevelHistoryData().LevelID;
         }
 
         public void SetLevelID(int levelID)
         {
-            gameData.LevelID = levelID;
+            GetLevelHistoryData().LevelID = levelID;
+            GetLevelHistoryData().SubLevelID = 0;
             AddBuffer();
         }
+
+        public int GetSubLevelID()
+        {
+            return GetLevelHistoryData().SubLevelID;
+        }
+        public void SetSubLevelID(int subLevelID)
+        {
+            GetLevelHistoryData().SubLevelID = subLevelID;
+            AddBuffer();
+        }
+        #endregion
 
         #region Tutorial
         public TutorialHistoryData GetTutorialHistoryData()

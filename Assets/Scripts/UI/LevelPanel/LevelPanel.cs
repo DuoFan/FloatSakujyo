@@ -20,9 +20,6 @@ namespace FloatSakujyo.UI
         Tween levelProgressTween;
 
         [SerializeField]
-        Image[] levelSteps;
-
-        [SerializeField]
         Button pauseBtn;
 
         [SerializeField]
@@ -43,11 +40,9 @@ namespace FloatSakujyo.UI
 
         public void OnLevelStart()
         {
-            SetLevelID(GameController.Instance.LevelData.ID);
+            SetLevelID(GameController.Instance.GetReadableLevelID());
 
             InitHelperBtns();
-
-            InitLevelSteps();
 
             UpdateLevelProgress();
 
@@ -58,20 +53,6 @@ namespace FloatSakujyo.UI
             packageBtn.Init(GameController.Instance.CompleteGroup);
             rearrangeBtn.Init(GameController.Instance.Rearrange);
             clearNoneSlotGroupBtn.Init(GameController.Instance.ClearNoneSlotGroup);
-        }
-
-        void InitLevelSteps()
-        {
-            var progressWidth = levelProgress.rectTransform.rect.width;
-            var levelData = GameController.Instance.LevelData;
-            var totalItemCount = GameController.Instance.TotalItemCount;
-            int itemCount = 0;
-            for (int i = 0; i < levelSteps.Length; i++)
-            {
-                itemCount += levelData.SubLevelDatas[i].TotalItemCount;
-                levelSteps[i].rectTransform.anchoredPosition = Vector3.right * (progressWidth * itemCount / totalItemCount - levelSteps[i].rectTransform.rect.width * 0.5f 
-                    * levelSteps[i].rectTransform.localScale.x);
-            }
         }
 
         void SetLevelID(int levelID)

@@ -1,5 +1,4 @@
 using DG.Tweening;
-using FloatSakujyo.Audio;
 using FloatSakujyo.Level;
 using FloatSakujyo.SaveData;
 using FloatSakujyo.UI;
@@ -7,12 +6,9 @@ using GameExtension;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using WeChatWASM;
 
 namespace FloatSakujyo.Game
 {
@@ -86,7 +82,7 @@ namespace FloatSakujyo.Game
         public event Action OnItemTook;
 
         int subLevelID;
-        int levelTookItemCount;
+        int tookItemCount;
         public int TotalItemCount { get; private set; }
         protected override void Internal_FreezeGameplay()
         {
@@ -115,8 +111,9 @@ namespace FloatSakujyo.Game
             waterLevel.Init(waveInterval);
 
             var levelID = GameDataManager.Instance.GetLevelID();
-            var levelData = LevelDataManager.Instance.GetData(levelID);
-            StartCoroutine(StartLevel(levelData));
+            LevelData = LevelDataManager.Instance.GetData(levelID);
+            var levelSubID = GameDataManager.Instance.GetSubLevelID();
+            StartCoroutine(StartLevel(levelSubID));
         }
 
         void InitAspectRatio()
@@ -161,56 +158,25 @@ namespace FloatSakujyo.Game
             colorGroupSlotView.InitNoneColorGroupSlotOffset(runtimeNoneColorGroupSlotOffset);
         }
 
-        protected IEnumerator StartLevel(LevelData levelData)
+        protected IEnumerator StartLevel(int _subLevelID)
         {
-            LevelData = levelData;
-
-            colorGroupSloter = new ColorGroupSloter(2, 6, true);
-
-            TotalItemCount = 0;
-            for (int i = 0; i < levelData.SubLevelDatas.Length; i++)
-            {
-                TotalItemCount += levelData.SubLevelDatas[i].TotalItemCount;
-            }
-
             LoadingPanel.Instance?.Show();
 
-            yield return StartSubLevel(0);
-
-            colorGroupSlotView.Init(colorGroupSloter);
-
-            OnItemTook = null;
-
-            InitIces();
-
-            var levelPanel = GameUIManager.Instance.OpenLevelPanel();
-
-            levelPanel.OnLevelStart();
-
-            if (true)
-            {
-                var itemUnlockProgressPanel = GameUIManager.Instance.OpenItemUnlockProgressPanel();
-                itemUnlockProgressPanel.OnLevelStart();
-            }
-            else
-            {
-                GameUIManager.Instance.CloseItemUnlockProgressPanel();
-            }
-
-            LoadingPanel.Instance?.Hide();
-        }
-
-        IEnumerator StartSubLevel(int _subLevelID)
-        {
             subLevelID = _subLevelID;
 
             var subLevelData = LevelData.SubLevelDatas[subLevelID];
+
+            colorGroupSloter = new ColorGroupSloter(2, 6, true);
 
             FreezeGameplay();
 
             yield return CreateLevelEntity(subLevelData);
 
-            levelTookItemCount = 0;
+            colorGroupSlotView.Init(colorGroupSloter);
+
+            TotalItemCount = subLevelData.TotalItemCount;
+
+            tookItemCount = 0;
 
             backupContent = new GameObject("BackupContent").transform;
             backupContent.SetParent(LevelEntity.transform);
@@ -241,6 +207,24 @@ namespace FloatSakujyo.Game
                 InitItem(edenItems[i], GetRandomEmptyItemGrid());
             }
 
+            InitIces();
+
+            OnItemTook = null;
+
+            var levelPanel = GameUIManager.Instance.OpenLevelPanel();
+
+            levelPanel.OnLevelStart();
+
+            if (true)
+            {
+                var itemUnlockProgressPanel = GameUIManager.Instance.OpenItemUnlockProgressPanel();
+                itemUnlockProgressPanel.OnLevelStart();
+            }
+            else
+            {
+                GameUIManager.Instance.CloseItemUnlockProgressPanel();
+            }
+
             while (IsFreezing)
             {
                 TryResumeGameplay();
@@ -248,6 +232,8 @@ namespace FloatSakujyo.Game
 
             isFaild = false;
             isCompleted = false;
+
+            LoadingPanel.Instance?.Hide();
         }
 
         ItemGrid[] CalculateGrids(int itemAmount, Bounds itemBounds, Vector3 positionArea)
@@ -549,22 +535,15 @@ namespace FloatSakujyo.Game
                 }
             }
 
-            levelTookItemCount++;
+            tookItemCount++;
 
-            if (levelTookItemCount == LevelData.SubLevelDatas[subLevelID].TotalItemCount && !isFaild && !isCompleted)
+            if (tookItemCount == LevelData.SubLevelDatas[subLevelID].TotalItemCount && !isFaild && !isCompleted)
             {
                 isCompleted = true;
 
                 yield return new WaitUntil(() => colorGroupSloter.CompletingSlotGroupCount <= 0);
 
-                if (subLevelID < LevelData.SubLevelDatas.Length - 1)
-                {
-                    OnSubLevelCompleted();
-                }
-                else
-                {
-                    OnGameCompleted();
-                }
+                OnGameCompleted();
             }
 
             yield break;
@@ -794,22 +773,19 @@ namespace FloatSakujyo.Game
 
         public virtual void Restart()
         {
-            DisposeLevelEntity();
-            DisposeIces();
-            colorGroupSloter.Dispose();
-            StartCoroutine(StartLevel(LevelData));
+            DisposeLevel();
+            StartCoroutine(StartLevel(subLevelID));
         }
 
         public void NextLevel()
         {
-            DisposeLevelEntity();
-            DisposeIces();
-            colorGroupSloter.Dispose();
-            var levelData = LevelDataManager.Instance.GetData(GameDataManager.Instance.GetLevelID());
-            StartCoroutine(StartLevel(levelData));
+            DisposeLevel();
+            LevelData = LevelDataManager.Instance.GetData(GameDataManager.Instance.GetLevelID());
+            var subLevelID = GameDataManager.Instance.GetSubLevelID();
+            StartCoroutine(StartLevel(subLevelID));
         }
 
-        void DisposeLevelEntity()
+        void DisposeLevel()
         {
             foreach (var item in OldItems)
             {
@@ -823,27 +799,20 @@ namespace FloatSakujyo.Game
                 }
             }
             LevelEntity.Dispose();
-        }
 
-        void DisposeIces()
-        {
             var rigidbodies = iceContent.GetComponentsInChildren<Rigidbody>();
             for (int i = rigidbodies.Length - 1; i >= 0; i--)
             {
                 slover.RemoveRigidbody(rigidbodies[i]);
             }
             Destroy(iceContent.gameObject);
+
+            colorGroupSloter.Dispose();
         }
 
         public float GetLevelProgress()
         {
-            int totalTookItemCount = levelTookItemCount;
-            for (int i = 0; i < subLevelID; i++)
-            {
-                totalTookItemCount += LevelData.SubLevelDatas[i].TotalItemCount;
-            }
-
-            return totalTookItemCount / (float)TotalItemCount;
+            return tookItemCount / (float)TotalItemCount;
         }
 
         public float GetReadablelProgress()
@@ -851,21 +820,27 @@ namespace FloatSakujyo.Game
             return GetLevelProgress() * 100;
         }
 
-
-        protected void OnSubLevelCompleted()
+        public int GetReadableLevelID()
         {
-            DisposeLevelEntity();
-            StartCoroutine(StartSubLevel(subLevelID + 1));
+            //LevelData.ID - 1是因为LevelData.ID是从1开始的
+            return (LevelData.ID - 1) * 3 + subLevelID + 1;
         }
 
         protected virtual void OnGameCompleted()
         {
-            var level = LevelDataManager.Instance.GetNextLevel(LevelData);
-            if (level == null)
+            if (subLevelID < LevelData.SubLevelDatas.Length - 1)
             {
-                level = LevelDataManager.Instance.GetFirstLevel();
+                GameDataManager.Instance.SetSubLevelID(subLevelID + 1);
             }
-            GameDataManager.Instance.SetLevelID(level.ID);
+            else
+            {
+                var level = LevelDataManager.Instance.GetNextLevel(LevelData);
+                if (level == null)
+                {
+                    level = LevelDataManager.Instance.GetFirstLevel();
+                }
+                GameDataManager.Instance.SetLevelID(level.ID);
+            }
 
             FreezeGameplay();
 
